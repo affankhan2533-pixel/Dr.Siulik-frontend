@@ -67,26 +67,7 @@ export default function HeroSection({ onOpenBooking }) {
           }}
         />
       )}
-
-      {/* ── GEMINI LOGO MASK — backdrop-blur circle over AI watermark bottom-right ── */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          bottom: '16px',
-          right: '16px',
-          width: '50px',
-          height: '50px',
-          borderRadius: '50%',
-          backdropFilter: 'blur(14px)',
-          WebkitBackdropFilter: 'blur(14px)',
-          opacity: 0.75,
-          pointerEvents: 'none',
-          zIndex: 2,
-        }}
-      />
-
-      {/* ── CINEMATIC OVERLAY — multi-layer for legibility without killing video ── */}
+{/* ── CINEMATIC OVERLAY — multi-layer for legibility without killing video ── */}
       <div
         className="hero-overlay"
         aria-hidden="true"

@@ -310,6 +310,13 @@ export const CLINIC_GALLERY = [
     image: "/assets/clinic/equipment/image copy.webp",
     aspect: "col-span-1 row-span-1",
   },
+  {
+    id: "g7",
+    title: "Modern Dental Treatment Suite",
+    category: "Treatment",
+    image: "/assets/clinic/treatment-rooms/image2.webp",
+    aspect: "col-span-1 row-span-1",
+  },
 ];
 
 export const FAQ_DATA = [

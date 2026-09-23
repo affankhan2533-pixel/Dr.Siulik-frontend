@@ -68,16 +68,19 @@ export default function HeroSection({ onOpenBooking }) {
         />
       )}
 
-      {/* ── LOGO COVER — hides AI watermark in bottom-right corner of video ── */}
+      {/* ── GEMINI LOGO MASK — backdrop-blur circle over AI watermark bottom-right ── */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute',
-          bottom: 0,
-          right: 0,
-          width: '80px',
-          height: '80px',
-          background: 'linear-gradient(135deg, transparent 30%, rgba(10,30,30,0.92) 60%)',
+          bottom: '16px',
+          right: '16px',
+          width: '50px',
+          height: '50px',
+          borderRadius: '50%',
+          backdropFilter: 'blur(14px)',
+          WebkitBackdropFilter: 'blur(14px)',
+          opacity: 0.75,
           pointerEvents: 'none',
           zIndex: 2,
         }}

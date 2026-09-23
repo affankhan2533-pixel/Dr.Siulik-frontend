@@ -151,7 +151,7 @@ export default function Footer({ onOpenBooking }) {
                   rel="noopener noreferrer"
                   className="py-1 text-brand-aqua hover:underline font-mono text-xs touch-manipulation"
                 >
-                  WhatsApp: +91 70086 75007
+                  WhatsApp: +91 99386 74499
                 </a>
               </div>
               <div className="flex items-start gap-3 pt-2">

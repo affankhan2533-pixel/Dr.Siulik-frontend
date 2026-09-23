@@ -219,7 +219,7 @@ export default function BookingModal({ isOpen, onClose }) {
                     Schedule Your Consultation
                   </h3>
                   <p className="text-xs text-brand-textMuted mt-1 font-sans">
-                    Fill in your details below. On submit, WhatsApp will open directly to our clinic coordinator at <strong>+91 70086 75007</strong>.
+                    Fill in your details below. On submit, WhatsApp will open directly to our clinic coordinator at <strong>+91 99386 74499</strong>.
                   </p>
                 </div>
 
@@ -454,14 +454,14 @@ export default function BookingModal({ isOpen, onClose }) {
                             <p><strong className="text-brand-textDark">Slot:</strong> {formData.preferredTime}</p>
                             <p><strong className="text-brand-textDark">Patient:</strong> {formData.patientName}</p>
                             <p><strong className="text-brand-textDark">Phone:</strong> {formData.patientPhone}</p>
-                            <p><strong className="text-brand-textDark">Direct Contact:</strong> WhatsApp +91 70086 75007</p>
+                            <p><strong className="text-brand-textDark">Direct Contact:</strong> WhatsApp +91 99386 74499</p>
                           </div>
                         </div>
 
                         <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
                           <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                           <p className="leading-relaxed">
-                            Clicking <strong>Confirm &amp; Send on WhatsApp</strong> will open WhatsApp to <strong>+91 70086 75007</strong> with your full consultation details pre-filled.
+                            Clicking <strong>Confirm &amp; Send on WhatsApp</strong> will open WhatsApp to <strong>+91 99386 74499</strong> with your full consultation details pre-filled.
                           </p>
                         </div>
                       </motion.div>
@@ -512,7 +512,7 @@ export default function BookingModal({ isOpen, onClose }) {
                     className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all"
                   >
                     <MessageSquare className="w-4 h-4 fill-white text-white" />
-                    <span>Continue to WhatsApp (+91 70086 75007)</span>
+                    <span>Continue to WhatsApp (+91 99386 74499)</span>
                   </a>
                 </div>
 

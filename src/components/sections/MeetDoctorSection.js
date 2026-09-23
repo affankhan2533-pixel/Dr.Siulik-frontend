@@ -75,7 +75,7 @@ export default function MeetDoctorSection() {
             </div>
 
             <p className="text-sm sm:text-lg text-brand-textDark/85 leading-relaxed font-sans max-w-xl font-normal">
-              Dr. Siulik Bandyopadhyay provides comprehensive dental care with an emphasis on clinical precision, gentle technique, and advanced restorative and implant dentistry.
+              Dr. Siulik Badajena provides comprehensive dental care with an emphasis on clinical precision, gentle technique, and advanced restorative and implant dentistry.
             </p>
 
             {/* Fine Line Credential & Role Callout */}

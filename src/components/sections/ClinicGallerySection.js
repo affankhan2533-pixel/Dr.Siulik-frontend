@@ -10,6 +10,7 @@ import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 function GalleryCard({ item, index, onOpen }) {
   const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
+  const handleLoad = () => setLoaded(true);
 
   return (
     <div
@@ -18,17 +19,23 @@ function GalleryCard({ item, index, onOpen }) {
       style={{ scrollSnapAlign: 'start' }}
     >
       {!loaded && (
-        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center pointer-events-none transition-opacity duration-300">
           <span className="text-xs font-mono text-brand-primary/40 uppercase tracking-widest">Loading...</span>
         </div>
       )}
       <img
+        ref={(el) => {
+          if (el && (el.complete || el.naturalWidth > 0) && !loaded) {
+            setLoaded(true);
+          }
+        }}
         src={item.image}
         alt={item.title}
-        loading="lazy"
+        loading={index < 2 ? "eager" : "lazy"}
         decoding="async"
-        onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={handleLoad}
+        onError={handleLoad}
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
       />
 
       {/* Gradient Scrim */}

@@ -1,26 +1,25 @@
 export const CLINIC_INFO = {
   name: "Dr. Siulik's Dental Care",
-  doctorName: "Dr. Siulik Bandyopadhyay",
+  doctorName: "Dr. Siulik Badajena",
   title: "Chief Dental Surgeon",
   tagline: "A Healthier Smile. A More Confident You.",
   subheadline: "Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.",
-  address: "Bhubaneswar, Odisha — Clinical Consultation Suite",
-  phonePrimary: "+91 70086 75007",
-  whatsappNumber: "917008675007",
+  address: "Near Chandaka Police Station, Bhubaneswar, Chandaka, Odisha 754012",
+  phonePrimary: "+91 99386 74499",
+  whatsappNumber: "919938674499",
   workingHours: [
-    { days: "Monday – Saturday", time: "10:00 AM – 8:00 PM" },
-    { days: "Sunday", time: "By Prior Appointment Only" }
+    { days: "Monday – Sunday", time: "09:00 AM – 01:00 PM & 04:00 PM – 08:30 PM" }
   ],
-  googleMapsUrl: "https://maps.google.com/?q=Dr+Siulik+Dental+Care",
+  googleMapsUrl: "https://maps.google.com/?q=Dr+Siulik+Dental+Care+Near+Chandaka+Police+Station+Bhubaneswar+Odisha+754012",
 };
 
 export const CONSULTATION_TIME_SLOTS = [
-  { id: 'slot-1', time: '10:00 AM – 11:30 AM', period: 'Morning' },
-  { id: 'slot-2', time: '11:30 AM – 01:00 PM', period: 'Morning' },
-  { id: 'slot-3', time: '02:00 PM – 03:30 PM', period: 'Afternoon' },
-  { id: 'slot-4', time: '03:30 PM – 05:00 PM', period: 'Afternoon' },
-  { id: 'slot-5', time: '05:00 PM – 06:30 PM', period: 'Evening' },
-  { id: 'slot-6', time: '06:30 PM – 08:00 PM', period: 'Evening' },
+  { id: 'slot-1', time: '09:00 AM – 10:20 AM', period: 'Morning' },
+  { id: 'slot-2', time: '10:20 AM – 11:40 AM', period: 'Morning' },
+  { id: 'slot-3', time: '11:40 AM – 01:00 PM', period: 'Morning' },
+  { id: 'slot-4', time: '04:00 PM – 05:30 PM', period: 'Evening' },
+  { id: 'slot-5', time: '05:30 PM – 07:00 PM', period: 'Evening' },
+  { id: 'slot-6', time: '07:00 PM – 08:30 PM', period: 'Evening' },
 ];
 
 export const SERVICES_DATA = [
@@ -322,7 +321,7 @@ export const CLINIC_GALLERY = [
 export const FAQ_DATA = [
   {
     question: "How do I schedule an appointment at Dr. Siulik's Dental Care?",
-    answer: "You can easily select your preferred date, time, and required treatment using our online consultation form, or connect directly on WhatsApp at +91 70086 75007.",
+    answer: "You can easily select your preferred date, time, and required treatment using our online consultation form, or connect directly on WhatsApp at +91 99386 74499.",
   },
   {
     question: "What safety and sterilization measures are followed at the clinic?",

@@ -446,7 +446,7 @@ export default function BeforeAfterSection() {
                 Authentic Clinical Documentation
               </strong>
               <span>
-                All treatment photography shown represents genuine clinical procedures performed by Dr. Siulik Bandyopadhyay. Individual treatment outcomes may vary based on unique oral conditions.
+                All treatment photography shown represents genuine clinical procedures performed by Dr. Siulik Badajena. Individual treatment outcomes may vary based on unique oral conditions.
               </span>
             </div>
           </div>

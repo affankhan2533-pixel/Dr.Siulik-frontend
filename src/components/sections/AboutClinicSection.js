@@ -9,7 +9,7 @@ import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 const CLINIC_SLIDES = [
   {
     id: 1,
-    image: "/assets/clinic/reception/image copy.webp",
+    image: "/assets/clinic/reception/image.webp",
     tag: "RECEPTION",
     title: "A calm, modern first impression.",
   },
@@ -21,12 +21,18 @@ const CLINIC_SLIDES = [
   },
   {
     id: 3,
+    image: "/assets/clinic/treatment-rooms/image2.webp",
+    tag: "TREATMENT SUITE",
+    title: "Modern dental operatory & patient chair.",
+  },
+  {
+    id: 4,
     image: "/assets/clinic/treatment-rooms/image.webp",
     tag: "TREATMENT ROOM",
     title: "Ergonomic comfort & precision care.",
   },
   {
-    id: 4,
+    id: 5,
     image: "/assets/clinic/interior/image.webp",
     tag: "CONSULTATION",
     title: "Transparent dialogue & patient education.",
@@ -36,6 +42,7 @@ const CLINIC_SLIDES = [
 function MobileClinicSlide({ slide, index, onOpen }) {
   const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
+  const handleLoad = () => setLoaded(true);
 
   return (
     <div
@@ -44,17 +51,23 @@ function MobileClinicSlide({ slide, index, onOpen }) {
       style={{ scrollSnapAlign: 'start' }}
     >
       {!loaded && (
-        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center pointer-events-none transition-opacity duration-300">
           <span className="text-[10px] font-mono text-brand-primary/40 uppercase tracking-widest">Loading...</span>
         </div>
       )}
       <img
+        ref={(el) => {
+          if (el && (el.complete || el.naturalWidth > 0) && !loaded) {
+            setLoaded(true);
+          }
+        }}
         src={slide.image}
         alt={slide.title}
-        loading="lazy"
+        loading={index < 2 ? "eager" : "lazy"}
         decoding="async"
-        onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={handleLoad}
+        onError={handleLoad}
+        className="w-full h-full object-cover transition-transform duration-500"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-textDark/90 via-brand-textDark/25 to-transparent pointer-events-none" />
       <div className="absolute bottom-3 left-3.5 right-3.5 z-10 pointer-events-none">
@@ -72,6 +85,7 @@ function MobileClinicSlide({ slide, index, onOpen }) {
 function DesktopClinicSlide({ slide, index, onOpen }) {
   const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
+  const handleLoad = () => setLoaded(true);
 
   return (
     <div
@@ -79,17 +93,23 @@ function DesktopClinicSlide({ slide, index, onOpen }) {
       className="w-[62vw] max-w-[760px] h-[440px] shrink-0 snap-start relative rounded-3xl overflow-hidden border border-brand-primary/20 shadow-xl bg-brand-primary/10 cursor-pointer group"
     >
       {!loaded && (
-        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center pointer-events-none transition-opacity duration-300">
           <span className="text-xs font-mono text-brand-primary/40 uppercase tracking-widest">Loading clinic view...</span>
         </div>
       )}
       <img
+        ref={(el) => {
+          if (el && (el.complete || el.naturalWidth > 0) && !loaded) {
+            setLoaded(true);
+          }
+        }}
         src={slide.image}
         alt={slide.title}
-        loading="lazy"
+        loading={index < 2 ? "eager" : "lazy"}
         decoding="async"
-        onLoad={() => setLoaded(true)}
-        className={`w-full h-full object-cover group-hover:scale-[1.02] transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={handleLoad}
+        onError={handleLoad}
+        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-textDark/90 via-brand-textDark/20 to-transparent pointer-events-none" />
       

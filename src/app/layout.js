@@ -1,5 +1,18 @@
 import './globals.css';
+import { Playfair_Display, Plus_Jakarta_Sans } from 'next/font/google';
 import { CLINIC_INFO } from '../data/clinicData';
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-playfair',
+});
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jakarta',
+});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || '';
 
@@ -15,7 +28,7 @@ export const metadata = {
   title: `${CLINIC_INFO.name} | ${CLINIC_INFO.doctorName} - ${CLINIC_INFO.title}`,
   description: CLINIC_INFO.subheadline,
   keywords: [
-    "Dr. Siulik Bandyopadhyay",
+    "Dr. Siulik Badajena",
     "Dr Siulik Dental Care",
     "Modern Dentist",
     "Implant Dentistry",
@@ -73,32 +86,35 @@ export default function RootLayout({ children }) {
     '@type': 'Dentist',
     name: CLINIC_INFO.name,
     image: siteUrl ? `${siteUrl}/assets/branding/logo.png` : undefined,
-    telePhone: CLINIC_INFO.phonePrimary,
+    telephone: CLINIC_INFO.phonePrimary,
     email: CLINIC_INFO.email,
     address: {
       '@type': 'PostalAddress',
       streetAddress: CLINIC_INFO.address,
+      addressLocality: 'Bhubaneswar',
+      addressRegion: 'Odisha',
+      postalCode: '754012',
       addressCountry: 'IN',
     },
-    openingHours: 'Mo-Sa 10:00-20:00',
+    openingHours: 'Mo-Su 09:00-13:00 16:00-20:30',
     priceRange: '$$',
   };
 
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className={`scroll-smooth ${playfair.variable} ${jakarta.variable}`}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-          rel="stylesheet"
+          rel="preload"
+          as="image"
+          href="/assets/hero/images/image.webp"
+          fetchPriority="high"
         />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-white text-brand-textDark antialiased selection:bg-brand-primary selection:text-white">
+      <body className="bg-white text-brand-textDark antialiased selection:bg-brand-primary selection:text-white font-sans">
         {children}
       </body>
     </html>

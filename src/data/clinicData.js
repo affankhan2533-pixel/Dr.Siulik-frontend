@@ -4,17 +4,24 @@ export const CLINIC_INFO = {
   title: "Chief Dental Surgeon",
   tagline: "A Healthier Smile. A More Confident You.",
   subheadline: "Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.",
-  address: "Main Clinic Road, City Center, Dental Suite 102",
-  phonePrimary: "+91 98765 43210",
-  phoneSecondary: "+91 33 2345 6789",
-  email: "care@drsiulikdental.com",
+  address: "Bhubaneswar, Odisha — Clinical Consultation Suite",
+  phonePrimary: "+91 70086 75007",
+  whatsappNumber: "917008675007",
   workingHours: [
     { days: "Monday – Saturday", time: "10:00 AM – 8:00 PM" },
     { days: "Sunday", time: "By Prior Appointment Only" }
   ],
   googleMapsUrl: "https://maps.google.com/?q=Dr+Siulik+Dental+Care",
-  whatsappNumber: "919876543210",
 };
+
+export const CONSULTATION_TIME_SLOTS = [
+  { id: 'slot-1', time: '10:00 AM – 11:30 AM', period: 'Morning' },
+  { id: 'slot-2', time: '11:30 AM – 01:00 PM', period: 'Morning' },
+  { id: 'slot-3', time: '02:00 PM – 03:30 PM', period: 'Afternoon' },
+  { id: 'slot-4', time: '03:30 PM – 05:00 PM', period: 'Afternoon' },
+  { id: 'slot-5', time: '05:00 PM – 06:30 PM', period: 'Evening' },
+  { id: 'slot-6', time: '06:30 PM – 08:00 PM', period: 'Evening' },
+];
 
 export const SERVICES_DATA = [
   {
@@ -184,27 +191,6 @@ export const BEFORE_AFTER_DATA = [
   },
 ];
 
-export const VIDEO_TESTIMONIALS = [
-  {
-    id: "v1",
-    patientName: "Patient Experience Feature 01",
-    treatment: "Comprehensive Dental Care",
-    quote: "Dr. Siulik made me feel completely relaxed throughout my procedure. Her gentle approach and clear explanations gave me total peace of mind.",
-    duration: "1:45",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-    poster: "/assets/testimonials/video-poster-1.svg",
-  },
-  {
-    id: "v2",
-    patientName: "Patient Experience Feature 02",
-    treatment: "Smile Restoration",
-    quote: "The environment at the clinic is incredibly serene. I couldn't be happier with the results of my smile makeover.",
-    duration: "2:10",
-    videoUrl: "https://www.w3schools.com/html/mov_bbb.mp4",
-    poster: "/assets/testimonials/video-poster-2.svg",
-  },
-];
-
 export const GOOGLE_REVIEWS = [
   {
     id: "gr1",
@@ -329,7 +315,7 @@ export const CLINIC_GALLERY = [
 export const FAQ_DATA = [
   {
     question: "How do I schedule an appointment at Dr. Siulik's Dental Care?",
-    answer: "You can easily submit your preferred date, time, and required treatment using our online appointment preference form, or call our clinic directly at +91 98765 43210.",
+    answer: "You can easily select your preferred date, time, and required treatment using our online consultation form, or connect directly on WhatsApp at +91 70086 75007.",
   },
   {
     question: "What safety and sterilization measures are followed at the clinic?",

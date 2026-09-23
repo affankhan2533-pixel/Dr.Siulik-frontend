@@ -92,7 +92,7 @@ export default function FAQSection() {
                       transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <div className="pl-8 sm:pl-14 pr-2 sm:pr-12 pb-6 sm:pb-8 pt-1 text-sm sm:text-base text-brand-textMuted leading-relaxed font-sans max-w-3xl">
-                        {faq.answer.replace(', or call our clinic directly at +91 98765 43210', '.')}
+                        {faq.answer}
                       </div>
                     </motion.div>
                   )}

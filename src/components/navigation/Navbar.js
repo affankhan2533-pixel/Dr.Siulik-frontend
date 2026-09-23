@@ -182,7 +182,7 @@ export default function Navbar({ onOpenBooking }) {
 
           {/* ── Right: Book CTA (desktop, ≥sm) ── */}
           <div className="hidden sm:flex items-center gap-3 shrink-0">
-            {CLINIC_INFO.phonePrimary && !CLINIC_INFO.phonePrimary.includes('98765') && (
+            {CLINIC_INFO.phonePrimary && (
               <a
                 href={`tel:${CLINIC_INFO.phonePrimary}`}
                 aria-label={`Call ${CLINIC_INFO.phonePrimary}`}
@@ -336,7 +336,7 @@ export default function Navbar({ onOpenBooking }) {
                 transition={{ duration: 0.45, delay: 0.42, ease: EASE }}
                 className="flex flex-col gap-3 pt-8 border-t border-white/10"
               >
-                {CLINIC_INFO.phonePrimary && !CLINIC_INFO.phonePrimary.includes('98765') ? (
+                {CLINIC_INFO.phonePrimary && (
                   <a
                     href={`tel:${CLINIC_INFO.phonePrimary}`}
                     onClick={close}
@@ -352,22 +352,6 @@ export default function Navbar({ onOpenBooking }) {
                   >
                     <Phone className="w-4 h-4 text-brand-aqua shrink-0" aria-hidden="true" />
                     {CLINIC_INFO.phonePrimary}
-                  </a>
-                ) : (
-                  <a
-                    href="#location"
-                    onClick={close}
-                    className="
-                      flex items-center justify-center gap-2.5 w-full
-                      min-h-[52px] py-3.5 rounded-full
-                      text-sm font-semibold tracking-wide
-                      text-white/80 border border-white/15
-                      hover:text-white hover:border-white/30 hover:bg-white/8
-                      transition-all duration-300 touch-manipulation
-                      focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-aqua
-                    "
-                  >
-                    View Clinic Hours &amp; Location
                   </a>
                 )}
 

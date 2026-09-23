@@ -135,24 +135,23 @@ export default function Footer({ onOpenBooking }) {
             <div className="flex flex-col gap-3 text-sm text-white/70 font-sans">
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-brand-aqua shrink-0 mt-1" />
-                <span>
-                  {CLINIC_INFO.address && !CLINIC_INFO.address.includes('Main Clinic Road')
-                    ? CLINIC_INFO.address
-                    : 'Consultation by prior appointment. Location details confirmed on booking.'}
-                </span>
+                <span>{CLINIC_INFO.address}</span>
               </div>
-              {CLINIC_INFO.phonePrimary && !CLINIC_INFO.phonePrimary.includes('98765') && (
-                <div className="flex items-center gap-3">
-                  <Phone className="w-4 h-4 text-brand-aqua shrink-0" />
-                  <a href={`tel:${CLINIC_INFO.phonePrimary}`} className="py-1 hover:text-white transition-colors font-mono touch-manipulation">
-                    {CLINIC_INFO.phonePrimary}
-                  </a>
-                </div>
-              )}
               <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-brand-aqua shrink-0" />
-                <a href={`mailto:${CLINIC_INFO.email}`} className="py-1 hover:text-white transition-colors touch-manipulation">
-                  {CLINIC_INFO.email}
+                <Phone className="w-4 h-4 text-brand-aqua shrink-0" />
+                <a href={`tel:${CLINIC_INFO.phonePrimary}`} className="py-1 hover:text-white transition-colors font-mono touch-manipulation">
+                  {CLINIC_INFO.phonePrimary}
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-brand-aqua text-xs font-mono font-bold">WA</span>
+                <a
+                  href={`https://wa.me/${CLINIC_INFO.whatsappNumber}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-1 text-brand-aqua hover:underline font-mono text-xs touch-manipulation"
+                >
+                  WhatsApp: +91 70086 75007
                 </a>
               </div>
               <div className="flex items-start gap-3 pt-2">
@@ -170,10 +169,32 @@ export default function Footer({ onOpenBooking }) {
 
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-white/50 gap-3 font-sans">
+        {/* Bottom Bar with Developer Credit in distinct typography */}
+        <div className="pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-white/60 gap-4 border-t border-white/10 mt-8">
           <p>© {new Date().getFullYear()} {CLINIC_INFO.name}. All rights reserved.</p>
-          <p className="text-center md:text-right">
+
+          {/* Distinct Developer Attribution */}
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono tracking-widest text-white/60 uppercase">
+              Developed by
+            </span>
+            <a
+              href="https://affan.nexcoreinstitute.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit Affan Khan portfolio"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-brand-primary/30 border border-brand-aqua/40 hover:border-brand-aqua transition-all duration-300 shadow-sm group"
+            >
+              <span className="font-serif italic font-bold text-sm tracking-wide text-brand-aqua group-hover:text-white transition-colors">
+                Affan Khan
+              </span>
+              <span className="text-[11px] font-mono text-brand-aqua group-hover:translate-x-0.5 transition-transform">
+                ↗
+              </span>
+            </a>
+          </div>
+
+          <p className="text-center md:text-right font-sans text-white/50 text-[11px]">
             Clinical Precision &amp; Patient-First Dental Care.
           </p>
         </div>

@@ -19,6 +19,7 @@ import ClinicGallerySection from '../components/sections/ClinicGallerySection';
 import FAQSection from '../components/sections/FAQSection';
 import AppointmentSection from '../components/sections/AppointmentSection';
 import LocationSection from '../components/sections/LocationSection';
+import ClinicConnect from '../components/sections/ClinicConnect';
 import Footer from '../components/navigation/Footer';
 import BookingModal from '../components/sections/BookingModal';
 import MobileStickyBar from '../components/navigation/MobileStickyBar';
@@ -88,7 +89,10 @@ export default function Home() {
       {/* 18. Location / Contact */}
       <LocationSection onOpenBooking={handleOpenBooking} />
 
-      {/* 19. Footer */}
+      {/* 19. Inside the Clinic / Clinic Connect */}
+      <ClinicConnect />
+
+      {/* 20. Footer */}
       <Footer onOpenBooking={handleOpenBooking} />
 
       {/* Appointment Booking Drawer / Modal */}

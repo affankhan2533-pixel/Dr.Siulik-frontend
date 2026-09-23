@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, ArrowUpRight, Instagram, Youtube } from 'lucide-react';
 import { CLINIC_INFO, SERVICES_DATA } from '../../data/clinicData';
 
 export default function Footer({ onOpenBooking }) {
@@ -59,6 +59,28 @@ export default function Footer({ onOpenBooking }) {
           <div className="text-xs text-white/60 space-y-1 font-sans pt-1">
             <p>Email: <a href={`mailto:${CLINIC_INFO.email}`} className="text-brand-aqua hover:underline">{CLINIC_INFO.email}</a></p>
             <p>Mon &ndash; Sat: 10:00 AM &ndash; 8:00 PM &bull; Sunday by Appointment</p>
+            <div className="flex items-center gap-3 pt-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/50">Connect:</span>
+              <a
+                href="https://www.instagram.com/drsiuliksdentalcare?stkn=aTl6a3N0aWxpeDBm&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram — Dr. Siulik's Dental Care"
+                className="text-brand-aqua hover:underline text-xs"
+              >
+                Instagram
+              </a>
+              <span className="text-white/30">&bull;</span>
+              <a
+                href="https://youtube.com/@drsiuliksdentalcare?si=DVFzYLlcGZjMDvsl"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube — Dr. Siulik's Dental Care"
+                className="text-brand-aqua hover:underline text-xs"
+              >
+                YouTube
+              </a>
+            </div>
           </div>
         </div>
 
@@ -96,6 +118,29 @@ export default function Footer({ onOpenBooking }) {
                 className="inline-flex items-center gap-2 text-xs font-semibold text-brand-aqua hover:text-white uppercase tracking-wider transition-colors font-sans"
               >
                 Plan Your Consultation <ArrowUpRight className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Compact Secondary Social Links */}
+            <div className="flex items-center gap-2.5 pt-1">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-white/50">Follow:</span>
+              <a
+                href="https://www.instagram.com/drsiuliksdentalcare?stkn=aTl6a3N0aWxpeDBm&utm_source=qr"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram — Dr. Siulik's Dental Care"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-brand-primary/40 border border-white/15 hover:border-brand-aqua/50 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+              >
+                <Instagram className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="https://youtube.com/@drsiuliksdentalcare?si=DVFzYLlcGZjMDvsl"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube — Dr. Siulik's Dental Care"
+                className="w-7 h-7 rounded-full bg-white/10 hover:bg-brand-primary/40 border border-white/15 hover:border-brand-aqua/50 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+              >
+                <Youtube className="w-3.5 h-3.5" />
               </a>
             </div>
           </div>

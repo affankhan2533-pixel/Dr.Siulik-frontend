@@ -13,7 +13,7 @@ import { useTapVsSwipe } from '../ui/useTapVsSwipe';
  * - Mobile-first order: MEET THE FOUNDER -> Large Portrait (94vw) -> Identity -> Statement -> Summary -> About Trigger
  * - Asymmetric desktop editorial composition (Large portrait left / refined typography right)
  * - Restrained image reveal: scale 1.02 -> 1.00 on viewport entry
- * - Factual identity: DR. SIULIK BANDYOPADHYAY / FOUNDER & CHIEF DENTAL SURGEON
+ * - Factual identity: DR. SIULIK BADAJENA / FOUNDER & CHIEF DENTAL SURGEON
  * - Playfair Display for Name & Statement; Plus Jakarta Sans for Labels, Body, and CTAs
  * - Fullscreen MediaLightbox preservation on mobile tap
  */
@@ -26,7 +26,7 @@ export default function MeetDoctorSection() {
       id: "doc-portrait",
       image: "/assets/doctor/image.png",
       tag: "FOUNDER & CHIEF DENTAL SURGEON",
-      title: "Dr. Siulik Bandyopadhyay — Founder & Chief Dental Surgeon",
+      title: "Dr. Siulik Badajena — Founder & Chief Dental Surgeon",
     },
   ];
 
@@ -66,7 +66,7 @@ export default function MeetDoctorSection() {
               {/* Authentic Client Doctor Photograph */}
               <img
                 src="/assets/doctor/image.png"
-                alt="Dr. Siulik Bandyopadhyay, Founder and Chief Dental Surgeon at Dr. Siulik's Dental Care"
+                alt="Dr. Siulik Badajena, Founder and Chief Dental Surgeon at Dr. Siulik's Dental Care"
                 loading="eager"
                 decoding="async"
                 className="w-full h-full object-cover object-[center_12%] group-hover:scale-[1.015] transition-transform duration-700 ease-out"
@@ -98,7 +98,7 @@ export default function MeetDoctorSection() {
 
             {/* Doctor Name */}
             <h2 className="font-serif font-bold text-2xl sm:text-3xl xl:text-4xl text-brand-textDark tracking-tight mb-1">
-              Dr. Siulik Bandyopadhyay
+              Dr. Siulik Badajena
             </h2>
 
             {/* Founder & Chief Dental Surgeon Title */}
@@ -150,7 +150,7 @@ export default function MeetDoctorSection() {
                   >
                     <div className="pt-3 pb-2 text-xs sm:text-sm text-brand-textMuted font-sans leading-relaxed space-y-2.5 border-t border-brand-primary/10">
                       <p>
-                        Leading the clinical team at Dr. Siulik&apos;s Dental Care, Dr. Siulik Bandyopadhyay emphasizes clinical rigor paired with empathetic, unhurried patient communication.
+                        Leading the clinical team at Dr. Siulik&apos;s Dental Care, Dr. Siulik Badajena emphasizes clinical rigor paired with empathetic, unhurried patient communication.
                       </p>
                       <p>
                         Every consultation focuses on transparent diagnosis, preventative preservation of natural teeth, and precision-guided restorative solutions planned around long-term dental health.
@@ -172,7 +172,7 @@ export default function MeetDoctorSection() {
                   FOUNDER
                 </span>
                 <span className="font-serif font-bold text-base sm:text-lg text-brand-textDark tracking-tight block">
-                  Dr. Siulik Bandyopadhyay
+                  Dr. Siulik Badajena
                 </span>
               </div>
               <span className="font-mono text-[10px] sm:text-[11px] text-brand-textMuted tracking-widest uppercase">

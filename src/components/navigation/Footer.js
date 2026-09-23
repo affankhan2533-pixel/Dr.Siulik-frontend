@@ -190,7 +190,7 @@ export default function Footer({ onOpenBooking }) {
             </span>
             <span className="hidden sm:inline text-white/30">•</span>
             <span className="font-serif font-bold text-sm tracking-wide text-white">
-              Dr. Siulik Bandyopadhyay
+              Dr. Siulik Badajena
             </span>
             <span className="hidden sm:inline text-white/30">•</span>
             <span className="font-mono text-[10px] tracking-widest text-white/50">

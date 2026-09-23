@@ -1,6 +1,6 @@
 export const CLINIC_INFO = {
   name: "Dr. Siulik's Dental Care",
-  doctorName: "Dr. Siulik Bandyopadhyay",
+  doctorName: "Dr. Siulik Badajena",
   title: "Chief Dental Surgeon",
   tagline: "A Healthier Smile. A More Confident You.",
   subheadline: "Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.",

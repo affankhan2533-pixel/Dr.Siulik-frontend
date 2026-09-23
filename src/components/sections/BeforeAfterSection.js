@@ -397,7 +397,7 @@ export default function BeforeAfterSection() {
         {/* Documentation Transparency Notice */}
         <div className="mt-8 pt-4 border-t border-brand-primary/15 flex items-center justify-between flex-wrap gap-2 text-[10px] sm:text-[11px] font-mono text-brand-textMuted uppercase tracking-wider">
           <span>Authentic Clinical Photography</span>
-          <span>Dr. Siulik Bandyopadhyay</span>
+          <span>Dr. Siulik Badajena</span>
         </div>
 
       </div>

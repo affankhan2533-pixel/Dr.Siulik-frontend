@@ -26,7 +26,7 @@ export const viewport = {
 export const metadata = {
   metadataBase: siteUrl ? new URL(siteUrl) : undefined,
   title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
-  description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
+  description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Badajena. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
   alternates: siteUrl ? { canonical: '/' } : undefined,
   robots: {
     index: true,
@@ -46,7 +46,7 @@ export const metadata = {
   },
   openGraph: {
     title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
-    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
+    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Badajena. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
     url: siteUrl || undefined,
     siteName: CLINIC_INFO.name,
     locale: 'en_US',
@@ -63,7 +63,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
-    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
+    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Badajena. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
     images: ['/assets/hero/images/image.png'],
   },
 };
@@ -118,7 +118,7 @@ export default function RootLayout({ children }) {
     ],
     founder: {
       '@type': 'Person',
-      name: 'Dr. Siulik Bandyopadhyay',
+      name: 'Dr. Siulik Badajena',
       jobTitle: 'Founder & Chief Dental Surgeon',
     },
   };

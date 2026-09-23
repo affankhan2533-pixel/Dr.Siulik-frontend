@@ -11,18 +11,21 @@ const AUTHENTIC_TESTIMONIALS = [
     title: "Patient Experience 01",
     category: "Consultation & Care",
     videoUrl: "/assets/testimonials/videos/VID-20260904-WA0026.mp4",
+    poster: "/assets/testimonials/video-poster-1.svg",
   },
   {
     id: "t2",
     title: "Patient Experience 02",
     category: "Restorative Treatment",
     videoUrl: "/assets/testimonials/videos/VID-20260904-WA0027.mp4",
+    poster: "/assets/testimonials/video-poster-2.svg",
   },
   {
     id: "t3",
     title: "Patient Experience 03",
     category: "Clinical Care Visit",
     videoUrl: "/assets/testimonials/videos/VID-20260904-WA0028.mp4",
+    poster: "/assets/testimonials/video-poster-1.svg",
   },
 ];
 
@@ -194,9 +197,10 @@ function MobileStoryRailCard({ story, index, isActive, onSelect, onPlay }) {
       <div className="relative aspect-video rounded-xl overflow-hidden bg-black border border-white/10">
         <video
           src={story.videoUrl}
+          poster={story.poster}
           muted
           playsInline
-          preload="metadata"
+          preload="none"
           className="w-full h-full object-cover opacity-80 pointer-events-none"
         />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -271,9 +275,10 @@ export default function TestimonialsSection() {
               <video
                 key={featured.id}
                 src={featured.videoUrl}
+                poster={featured.poster}
                 muted
                 playsInline
-                preload="metadata"
+                preload="none"
                 className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
@@ -369,6 +374,7 @@ export default function TestimonialsSection() {
                       <div className="relative w-20 h-14 rounded-xl overflow-hidden shrink-0 bg-black border border-white/10">
                         <video
                           src={v.videoUrl}
+                          poster={v.poster}
                           muted
                           playsInline
                           preload="none"

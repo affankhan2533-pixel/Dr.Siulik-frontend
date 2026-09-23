@@ -19,13 +19,13 @@ export default function TechnologySection() {
   const equipmentPhotos = [
     {
       id: "tech-1",
-      image: "/assets/clinic/equipment/image.png",
+      image: "/assets/clinic/equipment/image.webp",
       tag: "PRECISION OPERATORY",
       title: "Sterile Clinical Operatory & Digital Imaging Suite",
     },
     {
       id: "tech-2",
-      image: "/assets/clinic/equipment/image copy.png",
+      image: "/assets/clinic/equipment/image copy.webp",
       tag: "INSPECTION & STERILIZATION",
       title: "Class B Autoclaves & Multi-Stage Instrument Sterilization",
     },
@@ -83,7 +83,7 @@ export default function TechnologySection() {
               className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-aqua/25 bg-black/40 shadow-xl aspect-[16/11] sm:aspect-[4/3] lg:aspect-[1/1] w-full cursor-pointer group"
             >
               <img
-                src="/assets/clinic/equipment/image.png"
+                src="/assets/clinic/equipment/image.webp"
                 alt="Featured Clinical Equipment"
                 loading="lazy"
                 decoding="async"

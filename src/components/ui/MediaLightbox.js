@@ -172,6 +172,8 @@ export default function MediaLightbox({
               src={currentItem.image || currentItem.src}
               alt={currentItem.title || "Fullscreen view"}
               draggable="false"
+              loading="eager"
+              decoding="async"
               className="max-w-full max-h-[72vh] sm:max-h-[78vh] w-auto h-auto object-contain rounded-xl shadow-2xl pointer-events-none"
             />
           </motion.div>

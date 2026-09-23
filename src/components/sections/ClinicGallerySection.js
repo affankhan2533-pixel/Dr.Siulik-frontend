@@ -8,20 +8,27 @@ import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 
 function GalleryCard({ item, index, onOpen }) {
+  const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
 
   return (
     <div
       {...tapHandlers}
-      className="group relative w-[90vw] sm:w-[380px] lg:w-[440px] h-[320px] sm:h-[420px] shrink-0 snap-start rounded-3xl overflow-hidden border border-brand-primary/20 bg-brand-textDark shadow-soft hover:shadow-2xl transition-all duration-500 cursor-pointer"
+      className="group relative w-[90vw] sm:w-[380px] lg:w-[440px] h-[320px] sm:h-[420px] shrink-0 snap-start rounded-3xl overflow-hidden border border-brand-primary/20 bg-brand-primary/10 shadow-soft hover:shadow-2xl transition-all duration-500 cursor-pointer"
       style={{ scrollSnapAlign: 'start' }}
     >
+      {!loaded && (
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+          <span className="text-xs font-mono text-brand-primary/40 uppercase tracking-widest">Loading...</span>
+        </div>
+      )}
       <img
         src={item.image}
         alt={item.title}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
 
       {/* Gradient Scrim */}

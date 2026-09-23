@@ -9,45 +9,52 @@ import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 const CLINIC_SLIDES = [
   {
     id: 1,
-    image: "/assets/clinic/reception/image copy.png",
+    image: "/assets/clinic/reception/image copy.webp",
     tag: "RECEPTION",
     title: "A calm, modern first impression.",
   },
   {
     id: 2,
-    image: "/assets/clinic/equipment/image.png",
+    image: "/assets/clinic/equipment/image.webp",
     tag: "OPERATORY SUITE",
     title: "Sterile operatory with advanced imaging.",
   },
   {
     id: 3,
-    image: "/assets/clinic/treatment-rooms/image.png",
+    image: "/assets/clinic/treatment-rooms/image.webp",
     tag: "TREATMENT ROOM",
     title: "Ergonomic comfort & precision care.",
   },
   {
     id: 4,
-    image: "/assets/clinic/interior/image.png",
+    image: "/assets/clinic/interior/image.webp",
     tag: "CONSULTATION",
     title: "Transparent dialogue & patient education.",
   },
 ];
 
 function MobileClinicSlide({ slide, index, onOpen }) {
+  const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
 
   return (
     <div
       {...tapHandlers}
-      className="w-[90vw] shrink-0 snap-start relative rounded-2xl overflow-hidden aspect-[16/11] bg-brand-textDark border border-brand-primary/20 shadow-lg cursor-pointer active:scale-[0.99] transition-transform"
+      className="w-[90vw] shrink-0 snap-start relative rounded-2xl overflow-hidden aspect-[16/11] bg-brand-primary/10 border border-brand-primary/20 shadow-lg cursor-pointer active:scale-[0.99] transition-transform"
       style={{ scrollSnapAlign: 'start' }}
     >
+      {!loaded && (
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+          <span className="text-[10px] font-mono text-brand-primary/40 uppercase tracking-widest">Loading...</span>
+        </div>
+      )}
       <img
         src={slide.image}
         alt={slide.title}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-textDark/90 via-brand-textDark/25 to-transparent pointer-events-none" />
       <div className="absolute bottom-3 left-3.5 right-3.5 z-10 pointer-events-none">
@@ -63,19 +70,26 @@ function MobileClinicSlide({ slide, index, onOpen }) {
 }
 
 function DesktopClinicSlide({ slide, index, onOpen }) {
+  const [loaded, setLoaded] = useState(false);
   const tapHandlers = useTapVsSwipe(() => onOpen(index));
 
   return (
     <div
       {...tapHandlers}
-      className="w-[62vw] max-w-[760px] h-[440px] shrink-0 snap-start relative rounded-3xl overflow-hidden border border-brand-primary/20 shadow-xl bg-brand-textDark cursor-pointer group"
+      className="w-[62vw] max-w-[760px] h-[440px] shrink-0 snap-start relative rounded-3xl overflow-hidden border border-brand-primary/20 shadow-xl bg-brand-primary/10 cursor-pointer group"
     >
+      {!loaded && (
+        <div className="absolute inset-0 bg-brand-primary/10 animate-pulse flex items-center justify-center">
+          <span className="text-xs font-mono text-brand-primary/40 uppercase tracking-widest">Loading clinic view...</span>
+        </div>
+      )}
       <img
         src={slide.image}
         alt={slide.title}
         loading="lazy"
         decoding="async"
-        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700"
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-full object-cover group-hover:scale-[1.02] transition-all duration-700 ${loaded ? 'opacity-100' : 'opacity-0'}`}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-textDark/90 via-brand-textDark/20 to-transparent pointer-events-none" />
       

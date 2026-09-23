@@ -14,7 +14,7 @@ export default function MeetDoctorSection() {
   const doctorPhoto = [
     {
       id: "doc-1",
-      image: "/assets/doctor/image.png",
+      image: "/assets/doctor/image.webp",
       tag: "CHIEF DENTAL SURGEON",
       title: `${CLINIC_INFO.doctorName} — ${CLINIC_INFO.title}`,
     },
@@ -35,7 +35,7 @@ export default function MeetDoctorSection() {
               className="relative w-full max-w-full rounded-3xl overflow-hidden border border-brand-primary/20 shadow-xl bg-white cursor-pointer group"
             >
               <img
-                src="/assets/doctor/image.png"
+                src="/assets/doctor/image.webp"
                 alt={`${CLINIC_INFO.doctorName} - ${CLINIC_INFO.title}`}
                 loading="eager"
                 decoding="async"

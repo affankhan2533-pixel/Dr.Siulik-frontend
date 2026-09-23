@@ -33,7 +33,7 @@ export default function HeroSection({ onOpenBooking }) {
       {shouldReduceMotion ? (
         /* Static fallback for reduced-motion */
         <img
-          src="/assets/hero/images/image.png"
+          src="/assets/hero/images/image.webp"
           alt=""
           aria-hidden="true"
           style={{
@@ -48,7 +48,7 @@ export default function HeroSection({ onOpenBooking }) {
       ) : (
         <motion.video
           src="/assets/hero/video/hero-video.mp4"
-          poster="/assets/hero/images/image.png"
+          poster="/assets/hero/images/image.webp"
           autoPlay
           muted
           loop

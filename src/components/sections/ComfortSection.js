@@ -108,7 +108,7 @@ export default function ComfortSection() {
             {/* Main Image Frame */}
             <div className="relative rounded-3xl overflow-hidden border border-brand-primary/20 shadow-2xl bg-brand-soft min-h-[340px] sm:min-h-[420px] lg:min-h-[480px]">
               <img
-                src="/assets/clinic/interior/image.png"
+                src="/assets/clinic/interior/image.webp"
                 alt="Serene Patient Lounge at Dr. Siulik's Dental Care"
                 loading="lazy"
                 decoding="async"

@@ -1,143 +1,168 @@
 "use client";
 
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const PILLARS = [
+const PHILOSOPHY_VALUES = [
   {
-    label: "PERSONALISED TREATMENT",
-    body: "Care plans customized to your oral anatomy and personal goals.",
+    num: "01",
+    title: "PERSONALIZED",
+    statement: "Care mapped to your unique anatomy, with treatment paced to your goals.",
+    detail: "Comprehensive consultation listening to your history, prioritizing natural tooth preservation with transparent clinical guidance.",
   },
   {
-    label: "MODERN DENTISTRY",
-    body: "Digital diagnostics, low-dose imaging, and precision instrumentation.",
+    num: "02",
+    title: "PRECISE",
+    statement: "Evidence-based digital diagnostics and micro-precision clinical technique.",
+    detail: "Low-dose digital imaging, diagnostic clarity, and meticulous procedural standards for predictable, long-term oral wellness.",
   },
   {
-    label: "HONEST COMMUNICATION",
-    body: "Transparent explanations of all procedure options, timelines, and costs.",
-  },
-  {
-    label: "COMFORT-FIRST APPROACH",
-    body: "A calm, unhurried pace designed to make every visit reassuring.",
-  },
-  {
-    label: "COMPREHENSIVE CARE",
-    body: "From preventive hygiene to advanced implant care under one roof.",
+    num: "03",
+    title: "COMFORT-LED",
+    statement: "A calm, unhurried pace designed to make every visit reassuring.",
+    detail: "Gentle procedural technique, step-by-step clarity before treatment begins, and quiet operatory suites tailored to ease anxiety.",
   },
 ];
 
 export default function WhyChooseUsSection() {
-  const easeEditorial = [0.16, 1, 0.3, 1];
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  const toggleExpand = (idx) => {
+    setActiveIdx((prev) => (prev === idx ? null : idx));
+  };
 
   return (
-    <section className="py-10 sm:py-24 bg-white relative overflow-hidden">
+    <section
+      id="care-philosophy"
+      className="py-12 sm:py-20 lg:py-24 bg-white relative overflow-hidden select-none border-t border-brand-primary/10 scroll-mt-24"
+      aria-labelledby="philosophy-title"
+    >
+      {/* Subtle Architectural Grid Texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.02]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(0deg, #006C73 0px, #006C73 1px, transparent 1px, transparent 64px),
+            repeating-linear-gradient(90deg, #006C73 0px, #006C73 1px, transparent 1px, transparent 64px)`
+        }}
+      />
 
-      {/* Faint ambient glow */}
-      <div className="teal-ambient-glow -top-10 -right-20 opacity-30 pointer-events-none" />
+      {/* Large Subtle Watermark Accent: Architectural Numeral */}
+      <div className="absolute -bottom-8 -right-8 pointer-events-none select-none font-serif text-[180px] sm:text-[240px] font-bold text-brand-primary/[0.03] leading-none z-0">
+        03
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Asymmetric Editorial Composition (Left Headline / Right Values) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
 
-        {/* Header Statement */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-end mb-6 sm:mb-14">
-
-          {/* Left: Large Statement */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.65, ease: easeEditorial }}
-            className="lg:col-span-6"
-          >
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
-              THE CLINIC DIFFERENCE
-            </span>
-            <h2 className="font-serif font-bold text-2xl sm:text-5xl lg:text-6xl text-brand-textDark leading-tight tracking-tight">
-              Why Choose<br />
-              <span className="text-brand-deep italic font-normal">Dr. Siulik.</span>
-            </h2>
-          </motion.div>
-
-          {/* Right: One concise supporting sentence */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.65, delay: 0.1, ease: easeEditorial }}
-            className="lg:col-span-6"
-          >
-            <p className="text-xs sm:text-lg text-brand-textMuted leading-relaxed font-sans max-w-lg">
-              Care grounded in clinical excellence, clear communication, and dedicated personal attention for every patient.
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Mobile: Compact Brand-Value Narrative (Item 6) */}
-        <div className="md:hidden border-t border-brand-primary/15 pt-3">
-          <div className="flex flex-col gap-2.5">
-            {[
-              { title: "PERSONALIZED", phrase: "Care plans customized to your unique oral anatomy and individual smile goals." },
-              { title: "PRECISE", phrase: "Evidence-based diagnostics, low-dose imaging, and micro-precision clinical technique." },
-              { title: "COMFORT-LED", phrase: "A calm, unhurried pace designed to make every visit reassuring." },
-            ].map((item, idx) => (
-              <div key={idx} className="p-3 rounded-2xl bg-brand-soft/40 border border-brand-primary/10">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-                  <span className="font-mono text-xs font-bold tracking-wider text-brand-textDark uppercase">
-                    {item.title}
-                  </span>
-                </div>
-                <p className="text-xs text-brand-textMuted leading-relaxed font-sans pl-3.5">
-                  {item.phrase}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Desktop: Five Pillars — Fine-Line Horizontal List */}
-        <div className="hidden md:block relative border-t border-brand-primary/15">
-          {PILLARS.map((pillar, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.55, delay: idx * 0.08, ease: easeEditorial }}
-              className="group"
+          {/* Left: Headline & Brand Statement */}
+          <div className="lg:col-span-5">
+            <span
+              id="philosophy-kicker"
+              className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-2 sm:mb-3"
             >
-              <div className="py-6 sm:py-8 grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-10 items-start cursor-default hover:bg-brand-soft/40 transition-colors duration-300 px-3 -mx-3 rounded-xl">
+              THE DIFFERENCE
+            </span>
 
-                {/* Index Number */}
-                <div className="md:col-span-1 flex items-center">
-                  <span className="font-mono text-sm sm:text-base font-bold text-brand-primary/40 group-hover:text-brand-primary transition-colors duration-300">
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
+            <h2
+              id="philosophy-title"
+              className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-brand-textDark tracking-tight leading-tight"
+            >
+              Thoughtful care.<br />
+              <span className="text-brand-deep italic font-normal">Built around you.</span>
+            </h2>
+
+            <p className="text-xs sm:text-sm text-brand-textMuted font-sans max-w-sm leading-relaxed mt-3 sm:mt-5">
+              Core clinical principles guiding patient care at Dr. Siulik&apos;s Dental Care.
+            </p>
+
+            {/* Architectural Rule Accent */}
+            <div className="w-16 h-0.5 bg-brand-primary/25 mt-6 hidden lg:block" />
+          </div>
+
+          {/* Right: Three Numbered Editorial Values */}
+          <div
+            className="lg:col-span-7 flex flex-col border-t border-brand-primary/15 divide-y divide-brand-primary/15"
+            role="region"
+            aria-label="Core Care Values"
+          >
+            {PHILOSOPHY_VALUES.map((item, idx) => {
+              const isExpanded = activeIdx === idx;
+              return (
+                <div
+                  key={item.num}
+                  className={`transition-all duration-300 ${
+                    isExpanded ? 'bg-brand-soft/25' : 'hover:bg-brand-soft/10'
+                  }`}
+                >
+                  <button
+                    onClick={() => toggleExpand(idx)}
+                    className={`w-full py-5 sm:py-6 text-left transition-all duration-300 group focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary flex flex-col gap-1.5 ${
+                      isExpanded
+                        ? 'pl-4 border-l-2 border-brand-primary'
+                        : 'pl-2 border-l-2 border-transparent hover:pl-3'
+                    }`}
+                    aria-expanded={isExpanded}
+                    aria-controls={`philosophy-content-${item.num}`}
+                  >
+                    {/* Header Row: Number + Title + Action Hint */}
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={`font-mono text-xs font-bold tracking-widest transition-colors duration-200 ${
+                            isExpanded ? 'text-brand-primary' : 'text-brand-primary/60 group-hover:text-brand-primary'
+                          }`}
+                        >
+                          {item.num}
+                        </span>
+                        <h3
+                          className={`font-mono text-xs sm:text-sm font-bold tracking-[0.16em] uppercase transition-colors duration-200 ${
+                            isExpanded ? 'text-brand-textDark' : 'text-brand-textDark/80 group-hover:text-brand-deep'
+                          }`}
+                        >
+                          {item.title}
+                        </h3>
+                      </div>
+
+                      <span
+                        className={`font-mono text-xs transition-transform duration-300 ${
+                          isExpanded ? 'text-brand-primary rotate-45' : 'text-brand-textMuted group-hover:text-brand-primary'
+                        }`}
+                        aria-hidden="true"
+                      >
+                        +
+                      </span>
+                    </div>
+
+                    {/* Primary Statement: One short sentence visible */}
+                    <p className="text-xs sm:text-sm text-brand-textMuted leading-relaxed font-sans mt-0.5">
+                      {item.statement}
+                    </p>
+
+                    {/* Secondary Detail: Expandable on tap/click */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          id={`philosophy-content-${item.num}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <p className="text-xs text-brand-deep/80 leading-relaxed font-sans pt-2 border-t border-brand-primary/10 mt-1">
+                            {item.detail}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </button>
                 </div>
+              );
+            })}
+          </div>
 
-                {/* Label */}
-                <div className="md:col-span-4">
-                  <span className="text-[11px] font-mono font-bold tracking-[0.25em] text-brand-textDark group-hover:text-brand-deep transition-colors duration-300 uppercase">
-                    {pillar.label}
-                  </span>
-                </div>
-
-                {/* Body */}
-                <div className="md:col-span-7">
-                  <p className="text-sm sm:text-base text-brand-textMuted leading-relaxed font-sans">
-                    {pillar.body}
-                  </p>
-                </div>
-              </div>
-
-              {/* Progressive fine separator line */}
-              <motion.div
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.08, ease: easeEditorial }}
-                className="h-px bg-brand-primary/15 origin-left group-last:hidden"
-              />
-            </motion.div>
-          ))}
         </div>
 
       </div>

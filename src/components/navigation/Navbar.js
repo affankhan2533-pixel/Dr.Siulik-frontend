@@ -131,7 +131,7 @@ export default function Navbar({ onOpenBooking }) {
                 DR. SIULIK&apos;S
               </span>
               <span
-                className={`font-sans font-semibold text-[9px] tracking-[0.22em] uppercase transition-colors duration-300 ${
+                className={`font-sans font-semibold text-[9px] tracking-[0.16em] uppercase transition-colors duration-300 ${
                   overHero ? 'text-brand-aqua/90' : 'text-brand-primary'
                 }`}
               >

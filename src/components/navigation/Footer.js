@@ -1,23 +1,27 @@
-import Link from 'next/link';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight, Instagram, Youtube } from 'lucide-react';
-import { CLINIC_INFO, SERVICES_DATA } from '../../data/clinicData';
+"use client";
+
+import { MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
+import { CLINIC_INFO } from '../../data/clinicData';
 
 export default function Footer({ onOpenBooking }) {
+  const instagramUrl = "https://www.instagram.com/drsiuliksdentalcare?stkn=aTl6a3N0aWxpeDBm&utm_source=qr";
+  const youtubeUrl = "https://youtube.com/@drsiuliksdentalcare?si=DVFzYLlcGZjMDvsl";
+
   return (
-    <footer className="bg-brand-textDark text-white pt-12 sm:pt-20 pb-20 md:pb-12 border-t border-brand-deep/40 relative overflow-hidden">
-      {/* Background Subtle Atmosphere Glow Accent */}
-      <div className="teal-ambient-glow -top-40 -right-40 opacity-20" />
-      
+    <footer className="bg-brand-textDark text-white pt-12 sm:pt-16 pb-16 md:pb-12 border-t border-brand-deep/40 relative overflow-hidden select-none">
+      {/* Subtle Atmosphere Glow Accent */}
+      <div className="teal-ambient-glow -top-32 -right-32 opacity-15 pointer-events-none" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* ── Mobile Compact Footer (Prompt Item 17) ── */}
+        {/* ── Mobile Compact Section ── */}
         <div className="md:hidden flex flex-col gap-5 pb-8 border-b border-white/10">
           {/* Logo & Brand Line */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 border border-brand-aqua/30">
               <img
                 src="/assets/branding/logo.svg"
-                alt="Logo"
+                alt="Dr. Siulik's Dental Care Logo"
                 width="28"
                 height="28"
                 className="w-7 h-7 object-contain shrink-0"
@@ -39,56 +43,52 @@ export default function Footer({ onOpenBooking }) {
 
           {/* Primary CTA */}
           <button
-            onClick={onOpenBooking}
-            className="w-full py-3 rounded-full bg-brand-primary text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-brand-deep transition-colors"
+            type="button"
+            onClick={onOpenBooking || (() => {
+              const el = document.getElementById('book-appointment');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            })}
+            className="w-full py-3 min-h-[48px] rounded-full bg-brand-primary text-white text-xs font-bold uppercase tracking-wider shadow-md hover:bg-brand-deep transition-colors touch-manipulation"
           >
             Book an Appointment
           </button>
 
-          {/* Essential Navigation */}
-          <nav aria-label="Footer Essential Links" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-white/70 pt-2 border-t border-white/8">
+          {/* Essential Navigation (Single clean wrap, not repeated) */}
+          <nav aria-label="Footer Navigation" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-white/70 pt-2 border-t border-white/8">
             <a href="#about-clinic" className="hover:text-brand-aqua transition-colors py-1">About Clinic</a>
             <a href="#services" className="hover:text-brand-aqua transition-colors py-1">Treatments</a>
             <a href="#technology" className="hover:text-brand-aqua transition-colors py-1">Technology</a>
             <a href="#before-after" className="hover:text-brand-aqua transition-colors py-1">Case Studies</a>
+            <a href="#testimonials" className="hover:text-brand-aqua transition-colors py-1">Stories</a>
             <a href="#faq" className="hover:text-brand-aqua transition-colors py-1">FAQ</a>
             <a href="#location" className="hover:text-brand-aqua transition-colors py-1">Location</a>
           </nav>
 
           {/* Contact Details */}
           <div className="text-xs text-white/60 space-y-1 font-sans pt-1">
-            <p>Email: <a href={`mailto:${CLINIC_INFO.email}`} className="text-brand-aqua hover:underline">{CLINIC_INFO.email}</a></p>
-            <p>Mon &ndash; Sat: 10:00 AM &ndash; 8:00 PM &bull; Sunday by Appointment</p>
-            <div className="flex items-center gap-3 pt-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-white/50">Connect:</span>
-              <a
-                href="https://www.instagram.com/drsiuliksdentalcare?stkn=aTl6a3N0aWxpeDBm&utm_source=qr"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram — Dr. Siulik's Dental Care"
-                className="text-brand-aqua hover:underline text-xs"
-              >
-                Instagram
+            <p>
+              Phone:{' '}
+              <a href={`tel:${CLINIC_INFO.phonePrimary}`} className="text-white hover:text-brand-aqua font-mono font-bold">
+                {CLINIC_INFO.phonePrimary}
               </a>
-              <span className="text-white/30">&bull;</span>
-              <a
-                href="https://youtube.com/@drsiuliksdentalcare?si=DVFzYLlcGZjMDvsl"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube — Dr. Siulik's Dental Care"
-                className="text-brand-aqua hover:underline text-xs"
-              >
-                YouTube
+            </p>
+            <p>
+              Email:{' '}
+              <a href={`mailto:${CLINIC_INFO.email}`} className="text-brand-aqua hover:underline">
+                {CLINIC_INFO.email}
               </a>
-            </div>
+            </p>
+            <p className="text-[11px] text-white/50 pt-0.5">
+              Mon &ndash; Sun: 09:00 AM &ndash; 01:00 PM &bull; 04:00 PM &ndash; 08:30 PM
+            </p>
           </div>
         </div>
 
-        {/* ── Desktop Full Mega-Footer (hidden on mobile) ── */}
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-white/10">
+        {/* ── Desktop 3-Column Editorial Layout (hidden on mobile) ── */}
+        <div className="hidden md:grid grid-cols-12 gap-8 lg:gap-12 pb-12 border-b border-white/10 items-start">
           
-          {/* Brand & Overview */}
-          <div className="flex flex-col gap-4">
+          {/* Column 1: Brand & Identity (5 cols) */}
+          <div className="col-span-5 flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-white/10 p-1.5 flex items-center justify-center shrink-0 border border-brand-aqua/30 shadow-inner">
                 <img
@@ -96,7 +96,6 @@ export default function Footer({ onOpenBooking }) {
                   alt="Dr. Siulik's Dental Care Logo"
                   width="32"
                   height="32"
-                  style={{ maxWidth: '32px', maxHeight: '32px' }}
                   className="w-8 h-8 object-contain shrink-0"
                 />
               </div>
@@ -109,101 +108,69 @@ export default function Footer({ onOpenBooking }) {
                 </span>
               </div>
             </div>
-            <p className="text-sm text-white/70 leading-relaxed font-sans mt-2">
+
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-sans max-w-sm">
               Evidence-based dental care led by {CLINIC_INFO.doctorName}, Chief Dental Surgeon.
             </p>
-            <div className="pt-2">
-              <a
-                href="#book-appointment"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-brand-aqua hover:text-white uppercase tracking-wider transition-colors font-sans"
-              >
-                Plan Your Consultation <ArrowUpRight className="w-4 h-4" />
-              </a>
-            </div>
 
-            {/* Compact Secondary Social Links */}
-            <div className="flex items-center gap-2.5 pt-1">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-white/50">Follow:</span>
-              <a
-                href="https://www.instagram.com/drsiuliksdentalcare?stkn=aTl6a3N0aWxpeDBm&utm_source=qr"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram — Dr. Siulik's Dental Care"
-                className="w-7 h-7 rounded-full bg-white/10 hover:bg-brand-primary/40 border border-white/15 hover:border-brand-aqua/50 flex items-center justify-center text-white/80 hover:text-white transition-colors"
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={onOpenBooking || (() => {
+                  const el = document.getElementById('book-appointment');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                })}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-brand-aqua hover:text-white uppercase tracking-wider transition-colors font-sans touch-manipulation"
               >
-                <Instagram className="w-3.5 h-3.5" />
-              </a>
-              <a
-                href="https://youtube.com/@drsiuliksdentalcare?si=DVFzYLlcGZjMDvsl"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube — Dr. Siulik's Dental Care"
-                className="w-7 h-7 rounded-full bg-white/10 hover:bg-brand-primary/40 border border-white/15 hover:border-brand-aqua/50 flex items-center justify-center text-white/80 hover:text-white transition-colors"
-              >
-                <Youtube className="w-3.5 h-3.5" />
-              </a>
+                <span>Plan Your Consultation</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </button>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-col gap-4">
-            <h4 className="font-sans text-xs font-bold text-white tracking-widest uppercase">Quick Navigation</h4>
-            <ul className="flex flex-col gap-1.5 text-sm text-white/70 font-sans">
-              <li><a href="#about-clinic" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">About Clinic</a></li>
-              <li><a href="#meet-doctor" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Meet Dr. Siulik</a></li>
-              <li><a href="#services" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Treatments &amp; Services</a></li>
-              <li><a href="#technology" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Modern Technology</a></li>
-              <li><a href="#before-after" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Clinical Case Studies</a></li>
-              <li><a href="#testimonials" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Patient Experiences</a></li>
-              <li><a href="#faq" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Frequently Asked Questions</a></li>
-              <li><a href="#book-appointment" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">Book Appointment</a></li>
+          {/* Column 2: Essential Navigation (3 cols) */}
+          <div className="col-span-3 flex flex-col gap-3">
+            <span className="font-mono text-[10px] font-bold tracking-[0.16em] text-brand-aqua uppercase block">
+              NAVIGATION
+            </span>
+            <ul className="flex flex-col gap-2 text-xs text-white/70 font-sans">
+              <li><a href="#about-clinic" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">About Clinic</a></li>
+              <li><a href="#meet-doctor" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Meet the Founder</a></li>
+              <li><a href="#services" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Treatments &amp; Disciplines</a></li>
+              <li><a href="#technology" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Modern Technology</a></li>
+              <li><a href="#before-after" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Clinical Results</a></li>
+              <li><a href="#testimonials" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Patient Stories</a></li>
+              <li><a href="#faq" className="hover:text-brand-aqua transition-colors py-0.5 inline-block">Frequently Asked Questions</a></li>
             </ul>
           </div>
 
-          {/* Service Categories */}
-          <div className="flex flex-col gap-4">
-            <h4 className="font-sans text-xs font-bold text-white tracking-widest uppercase">Specialties</h4>
-            <ul className="flex flex-col gap-1.5 text-sm text-white/70 font-sans">
-              {SERVICES_DATA.map((srv) => (
-                <li key={srv.id}>
-                  <a href="#services" className="py-1 inline-block hover:text-brand-aqua transition-colors touch-manipulation">
-                    {srv.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Location & Direct Inquiries */}
-          <div className="flex flex-col gap-4">
-            <h4 className="font-sans text-xs font-bold text-white tracking-widest uppercase">Contact &amp; Hours</h4>
-            <div className="flex flex-col gap-3 text-sm text-white/70 font-sans">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-brand-aqua shrink-0 mt-1" />
-                <span>{CLINIC_INFO.address}</span>
+          {/* Column 3: Contact & Hours (4 cols) */}
+          <div className="col-span-4 flex flex-col gap-3">
+            <span className="font-mono text-[10px] font-bold tracking-[0.16em] text-brand-aqua uppercase block">
+              CONTACT &amp; HOURS
+            </span>
+            <div className="flex flex-col gap-2 text-xs text-white/70 font-sans">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="w-3.5 h-3.5 text-brand-aqua shrink-0 mt-0.5" />
+                <span className="leading-relaxed">{CLINIC_INFO.address}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="w-4 h-4 text-brand-aqua shrink-0" />
-                <a href={`tel:${CLINIC_INFO.phonePrimary}`} className="py-1 hover:text-white transition-colors font-mono touch-manipulation">
+              <div className="flex items-center gap-2.5">
+                <Phone className="w-3.5 h-3.5 text-brand-aqua shrink-0" />
+                <a href={`tel:${CLINIC_INFO.phonePrimary}`} className="font-mono font-bold text-white hover:text-brand-aqua transition-colors">
                   {CLINIC_INFO.phonePrimary}
                 </a>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="text-brand-aqua text-xs font-mono font-bold">WA</span>
-                <a
-                  href={`https://wa.me/${CLINIC_INFO.whatsappNumber}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-1 text-brand-aqua hover:underline font-mono text-xs touch-manipulation"
-                >
-                  WhatsApp: +91 99386 74499
+              <div className="flex items-center gap-2.5">
+                <Mail className="w-3.5 h-3.5 text-brand-aqua shrink-0" />
+                <a href={`mailto:${CLINIC_INFO.email}`} className="text-white hover:text-brand-aqua transition-colors">
+                  {CLINIC_INFO.email}
                 </a>
               </div>
-              <div className="flex items-start gap-3 pt-2">
-                <Clock className="w-4 h-4 text-brand-aqua shrink-0 mt-1" />
+              <div className="flex items-start gap-2.5 pt-1">
+                <Clock className="w-3.5 h-3.5 text-brand-aqua shrink-0 mt-0.5" />
                 <div>
                   {CLINIC_INFO.workingHours.map((wh, idx) => (
-                    <p key={idx} className="text-xs text-white/80">
+                    <p key={idx} className="text-[11px] text-white/80">
                       <span className="font-semibold text-white">{wh.days}:</span> {wh.time}
                     </p>
                   ))}
@@ -214,35 +181,57 @@ export default function Footer({ onOpenBooking }) {
 
         </div>
 
-        {/* Bottom Bar with Developer Credit in distinct typography */}
-        <div className="pt-6 sm:pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-white/60 gap-4 border-t border-white/10 mt-8">
-          <p>© {new Date().getFullYear()} {CLINIC_INFO.name}. All rights reserved.</p>
-
-          {/* Distinct Developer Attribution */}
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-mono tracking-widest text-white/60 uppercase">
-              Developed by
+        {/* ── Founder Signature & Social Presence Bar ── */}
+        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Subtle Closing Founder Signature */}
+          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+            <span className="font-mono text-[10px] tracking-[0.16em] text-brand-aqua/80 uppercase">
+              FOUNDER &amp; CHIEF DENTAL SURGEON
             </span>
-            <a
-              href="https://affan.nexcoreinstitute.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Visit Affan Khan portfolio"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 hover:bg-brand-primary/30 border border-brand-aqua/40 hover:border-brand-aqua transition-all duration-300 shadow-sm group"
-            >
-              <span className="font-serif italic font-bold text-sm tracking-wide text-brand-aqua group-hover:text-white transition-colors">
-                Affan Khan
-              </span>
-              <span className="text-[11px] font-mono text-brand-aqua group-hover:translate-x-0.5 transition-transform">
-                ↗
-              </span>
-            </a>
+            <span className="hidden sm:inline text-white/30">•</span>
+            <span className="font-serif font-bold text-sm tracking-wide text-white">
+              Dr. Siulik Bandyopadhyay
+            </span>
+            <span className="hidden sm:inline text-white/30">•</span>
+            <span className="font-mono text-[10px] tracking-widest text-white/50">
+              EST. 2025
+            </span>
           </div>
 
-          <p className="text-center md:text-right font-sans text-white/50 text-[11px]">
-            Clinical Precision &amp; Patient-First Dental Care.
+          {/* Compact Secondary Social Links */}
+          <div className="flex items-center gap-4 text-xs font-mono">
+            <span className="text-white/40 uppercase tracking-wider text-[10px]">CONNECT:</span>
+            <a
+              href={instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram — Dr. Siulik's Dental Care"
+              className="text-brand-aqua hover:text-white transition-colors"
+            >
+              Instagram ↗
+            </a>
+            <span className="text-white/20">•</span>
+            <a
+              href={youtubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube — Dr. Siulik's Dental Care"
+              className="text-brand-aqua hover:text-white transition-colors"
+            >
+              YouTube ↗
+            </a>
+          </div>
+        </div>
+
+        {/* ── Sub-Footer Bar: Copyright & Brand Line ── */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/50 border-t border-white/5 mt-6">
+          <p>© {new Date().getFullYear()} {CLINIC_INFO.name}. All rights reserved.</p>
+
+          <p className="text-center sm:text-right font-mono text-[10px] tracking-widest text-white/40 uppercase">
+            CLINICAL PRECISION. PATIENT-FIRST CARE.
           </p>
         </div>
+
       </div>
     </footer>
   );

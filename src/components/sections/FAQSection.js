@@ -19,21 +19,18 @@ export default function FAQSection() {
         
         {/* Editorial Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-3xl mb-6 sm:mb-12"
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-3xl mb-6 sm:mb-10"
         >
-          <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
+          <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-1.5 sm:mb-2">
             PATIENT GUIDANCE
           </span>
           <h2 className="font-serif font-bold text-2xl sm:text-4xl text-brand-textDark leading-tight tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-base text-brand-textMuted mt-1.5 sm:mt-2.5 leading-relaxed font-sans max-w-xl">
-            Answers to common questions regarding clinic visits, consultations, and sterilization protocols.
-          </p>
         </motion.div>
 
         {/* Editorial Accordion List Structure with Fine-line Separators */}

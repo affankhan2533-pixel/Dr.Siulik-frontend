@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, Clock, User, Phone, Mail, MessageSquare, Check, ArrowRight, ArrowLeft, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
-import Badge from '../ui/Badge';
-import Button from '../ui/Button';
+import { Calendar, Clock, User, Phone, Mail, MessageSquare, Check, ArrowRight, ArrowLeft, ShieldCheck, PhoneCall } from 'lucide-react';
 import { SERVICES_DATA, CLINIC_INFO, CONSULTATION_TIME_SLOTS } from '../../data/clinicData';
 import { createAppointmentWhatsAppUrl } from '../../lib/whatsapp';
 
@@ -23,8 +21,6 @@ export default function AppointmentSection() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [slotAvailability, setSlotAvailability] = useState({});
-  const [loadingSlots, setLoadingSlots] = useState(false);
 
   // Set default date to tomorrow on initial mount if empty
   useEffect(() => {
@@ -39,105 +35,67 @@ export default function AppointmentSection() {
     }
   }, []);
 
-  // Fetch real-time slot availability whenever date changes
-  useEffect(() => {
-    if (!formData.preferredDate) return;
-
-    let isMounted = true;
-    const fetchAvailability = async () => {
-      setLoadingSlots(true);
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        const res = await fetch(`${apiUrl}/appointments/availability?date=${formData.preferredDate}`);
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && data.slots) {
-            const availMap = {};
-            data.slots.forEach((s) => {
-              availMap[s.time] = s;
-            });
-            setSlotAvailability(availMap);
-
-            // If current selected slot is fully booked, switch to first available
-            const currentSlotData = availMap[formData.preferredTime];
-            if (currentSlotData && !currentSlotData.isAvailable) {
-              const firstFree = data.slots.find((s) => s.isAvailable);
-              if (firstFree) {
-                setFormData((prev) => ({ ...prev, preferredTime: firstFree.time }));
-              }
-            }
-          }
-        }
-      } catch (err) {
-        console.warn('Real-time slot check running in offline mode:', err);
-      } finally {
-        if (isMounted) setLoadingSlots(false);
-      }
-    };
-
-    fetchAvailability();
-    return () => {
-      isMounted = false;
-    };
-  }, [formData.preferredDate]);
-
-  const handleNext = async (e) => {
-    e.preventDefault();
+  const handleNext = (e) => {
+    if (e) e.preventDefault();
     setErrorMessage('');
 
-    // Step validations
+    // Step 2 validation
     if (step === 2) {
       if (!formData.preferredDate) {
-        setErrorMessage('Please choose a preferred appointment date.');
+        setErrorMessage('Please select a preferred consultation date.');
         return;
       }
-      const slotData = slotAvailability[formData.preferredTime];
-      if (slotData && !slotData.isAvailable) {
-        setErrorMessage('The selected time slot is fully booked (max 2 patients). Please choose another slot.');
+      if (!formData.preferredTime) {
+        setErrorMessage('Please select a preferred time window.');
         return;
       }
     }
 
+    // Step 3 validation
     if (step === 3) {
       if (!formData.patientName.trim()) {
         setErrorMessage('Please enter your full name.');
         return;
       }
       if (!formData.patientPhone.trim() || formData.patientPhone.trim().length < 8) {
-        setErrorMessage('Please enter a valid contact phone number.');
+        setErrorMessage('Please enter a valid phone number.');
         return;
       }
     }
 
     if (step < 4) {
-      setStep(step + 1);
-    } else {
-      setLoading(true);
-      const whatsappUrl = createAppointmentWhatsAppUrl(formData);
+      setStep((prev) => prev + 1);
+    }
+  };
 
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
-        const res = await fetch(`${apiUrl}/appointments`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
+  const handleBack = () => {
+    setErrorMessage('');
+    if (step > 1) {
+      setStep((prev) => prev - 1);
+    }
+  };
 
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          if (errData.slotFull) {
-            setErrorMessage(errData.message || 'This slot just reached capacity. Please select another slot.');
-            setStep(2);
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('Backend API request offline; proceeding with direct WhatsApp flow:', err);
-      } finally {
-        setLoading(false);
-        setSubmitted(true);
-        // Direct reconnect: open WhatsApp with full details
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
+    setErrorMessage('');
+    setLoading(true);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+      await fetch(`${apiUrl}/appointments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+    } catch (err) {
+      console.warn('Backend offline; proceeding with direct confirmation:', err);
+    } finally {
+      setLoading(false);
+      setSubmitted(true);
+
+      // Direct WhatsApp redirect if selected
+      if (formData.contactMethod === 'WhatsApp') {
+        const whatsappUrl = createAppointmentWhatsAppUrl(formData);
         try {
           window.open(whatsappUrl, '_blank');
         } catch {
@@ -147,14 +105,10 @@ export default function AppointmentSection() {
     }
   };
 
-  const handleBack = () => {
-    setErrorMessage('');
-    if (step > 1) setStep(step - 1);
-  };
-
   const handleReset = () => {
     setStep(1);
     setSubmitted(false);
+    setErrorMessage('');
     setFormData({
       treatment: SERVICES_DATA[0].title,
       preferredDate: '',
@@ -168,41 +122,41 @@ export default function AppointmentSection() {
   };
 
   return (
-    <section id="book-appointment" className="py-12 sm:py-20 lg:py-24 bg-gradient-to-b from-white via-brand-soft/40 to-white relative overflow-hidden">
-      {/* Decorative Atmosphere Ambient Glow */}
-      <div className="teal-ambient-glow -top-32 -left-32 opacity-30" />
-      <div className="teal-ambient-glow -bottom-32 -right-32 opacity-25" />
+    <section
+      id="book-appointment"
+      className="pt-10 sm:pt-16 lg:pt-20 pb-28 sm:pb-20 lg:pb-24 bg-white relative overflow-hidden select-none border-t border-brand-primary/10 scroll-mt-24"
+      aria-label="Appointment Concierge"
+    >
+      {/* Subtle Ambient Background Lighting */}
+      <div className="teal-ambient-glow -top-24 -left-24 opacity-20 pointer-events-none" />
+      <div className="teal-ambient-glow -bottom-24 -right-24 opacity-15 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start">
           
-          {/* Left: Large Editorial Heading & Clinical Reassurance */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-5 flex flex-col gap-3 sm:gap-5"
-          >
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-primary uppercase block">
+          {/* ── Left Column: Editorial Heading & Reassurance ── */}
+          <div className="lg:col-span-5 flex flex-col gap-3 sm:gap-4">
+            <span className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block">
               CONSULTATION &amp; CARE PLANNING
             </span>
+
             <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-brand-textDark leading-tight tracking-tight">
               Let&apos;s plan your next step.
             </h2>
-            <p className="text-xs sm:text-base text-brand-textMuted leading-relaxed font-sans max-w-md">
-              Select your consultation preference. To ensure meticulous attention, our clinic maintains a strict capacity of <strong className="text-brand-deep">maximum 2 patients per time slot</strong>.
+
+            <p className="text-xs sm:text-sm text-brand-textMuted leading-relaxed font-sans max-w-md">
+              Select your consultation preferences for personal, unhurried attention at Dr. Siulik&apos;s Dental Care.
             </p>
 
-            {/* Editorial Reassurance Points */}
+            {/* Editorial Reassurance Points (Desktop Only) */}
             <div className="hidden lg:flex flex-col gap-3.5 pt-6 border-t border-brand-primary/15 mt-2">
               <div className="flex items-start gap-3">
                 <div className="w-5 h-5 rounded-full bg-brand-soft text-brand-primary flex items-center justify-center shrink-0 mt-0.5">
                   <Check className="w-3 h-3" />
                 </div>
                 <p className="text-xs text-brand-textDark font-sans">
-                  <strong>Direct WhatsApp Reconnection:</strong> Your consultation request connects immediately to our clinic coordinator at <strong>+91 99386 74499</strong>.
+                  <strong>Personal Coordination:</strong> Connects directly with our clinical desk at <strong>{CLINIC_INFO.phonePrimary}</strong>.
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -210,7 +164,7 @@ export default function AppointmentSection() {
                   <Clock className="w-3 h-3" />
                 </div>
                 <p className="text-xs text-brand-textDark font-sans">
-                  <strong>Strict Slot Capacity (Max 2):</strong> Zero waiting room overcrowding; unhurried clinical dialogue.
+                  <strong>Unhurried Consultations:</strong> Ample appointment time dedicated to clear diagnostic communication.
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -218,101 +172,144 @@ export default function AppointmentSection() {
                   <ShieldCheck className="w-3 h-3" />
                 </div>
                 <p className="text-xs text-brand-textDark font-sans">
-                  <strong>Transparent Guidance:</strong> Complete upfront procedural explanation and sterilized instrumentation.
+                  <strong>Transparent Guidance:</strong> Complete upfront treatment explanations and sterile modern operatories.
                 </p>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          {/* Right: Step-by-Step Interactive Form */}
+          {/* ── Right Column: Concierge Flow Container ── */}
           <div className="lg:col-span-7">
-            <div className="bg-white/90 backdrop-blur-md p-6 sm:p-10 rounded-3xl border border-brand-primary/20 shadow-xl relative overflow-hidden">
+            <div className="bg-white rounded-2xl sm:rounded-3xl border border-brand-primary/20 shadow-xl p-5 sm:p-8 lg:p-10 relative overflow-hidden">
               
               {!submitted ? (
                 <div>
-                  {/* Step Progress Bar */}
-                  <div className="mb-6 sm:mb-8">
-                    <div className="flex items-center justify-between text-xs font-mono font-bold tracking-wider text-brand-primary uppercase mb-2">
-                      <span>Step 0{step} of 04</span>
-                      <span>
-                        {step === 1 && 'Select Specialty'}
-                        {step === 2 && 'Preferred Time Slot'}
-                        {step === 3 && 'Patient Details'}
-                        {step === 4 && 'Direct WhatsApp Confirmation'}
+                  {/* ── Refined Minimal Progress Indicator ── */}
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b border-brand-primary/10">
+                    <div className="flex items-center gap-2 font-mono text-xs">
+                      <span className="text-brand-primary font-bold">0{step}</span>
+                      <span className="text-brand-textMuted/40">/</span>
+                      <span className="text-brand-textMuted font-medium">04</span>
+                      <span className="text-brand-primary/30 mx-1">•</span>
+                      <span className="text-brand-textDark font-sans font-semibold text-xs tracking-wider uppercase">
+                        {step === 1 && 'What brings you in?'}
+                        {step === 2 && 'Preferred Timing'}
+                        {step === 3 && 'Your Details'}
+                        {step === 4 && 'Preferred Reach Out'}
                       </span>
                     </div>
-                    <div className="w-full h-1.5 bg-brand-soft rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-brand-deep to-brand-primary transition-all duration-300 rounded-full"
-                        style={{ width: `${(step / 4) * 100}%` }}
-                      />
+
+                    {/* Segmented Line Indicator */}
+                    <div className="flex items-center gap-1.5" aria-hidden="true">
+                      {[1, 2, 3, 4].map((s) => (
+                        <div
+                          key={s}
+                          className={`h-1 rounded-full transition-all duration-300 ${
+                            s === step
+                              ? 'w-6 bg-brand-primary'
+                              : s < step
+                              ? 'w-3 bg-brand-primary/40'
+                              : 'w-3 bg-brand-primary/15'
+                          }`}
+                        />
+                      ))}
                     </div>
                   </div>
 
-                  {errorMessage && (
-                    <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 font-sans animate-shake">
-                      <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
-                      <span>{errorMessage}</span>
-                    </div>
-                  )}
-
-                  <form onSubmit={handleNext}>
+                  {/* ── Step-by-Step Concierge Form ── */}
+                  <form onSubmit={step === 4 ? handleSubmit : handleNext}>
                     <AnimatePresence mode="wait">
-                      {/* STEP 1: Treatment Selection */}
+
+                      {/* ── STEP 01: WHAT BRINGS YOU IN? ── */}
                       {step === 1 && (
                         <motion.div
                           key="step-1"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          initial={{ opacity: 0, x: 12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -12 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                           className="space-y-4"
                         >
-                          <label className="block text-sm font-semibold text-brand-textDark mb-1">
-                            Choose Required Treatment Area:
-                          </label>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[300px] overflow-y-auto pr-1">
+                          <div className="mb-2">
+                            <span className="text-[10px] font-mono tracking-widest text-brand-primary uppercase font-bold block mb-1">
+                              STEP 01
+                            </span>
+                            <h3 className="font-serif font-bold text-lg sm:text-xl text-brand-textDark">
+                              What brings you in?
+                            </h3>
+                            <p className="text-xs text-brand-textMuted font-sans mt-0.5">
+                              Choose the clinical discipline matching your consultation need.
+                            </p>
+                          </div>
+
+                          <div className="space-y-2 max-h-[340px] overflow-y-auto pr-1 -mr-1">
                             {SERVICES_DATA.map((srv) => {
                               const isSelected = formData.treatment === srv.title;
                               return (
-                                <div
+                                <button
                                   key={srv.id}
-                                  onClick={() => setFormData({ ...formData, treatment: srv.title })}
-                                  className={`p-3.5 rounded-2xl border text-left cursor-pointer transition-all touch-manipulation flex items-center justify-between ${
+                                  type="button"
+                                  onClick={() => {
+                                    setFormData({ ...formData, treatment: srv.title });
+                                    setErrorMessage('');
+                                  }}
+                                  className={`w-full p-3.5 sm:p-4 rounded-xl border text-left transition-all flex items-center justify-between min-h-[52px] touch-manipulation focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary ${
                                     isSelected
-                                      ? 'bg-brand-soft border-brand-primary ring-2 ring-brand-primary/20 text-brand-deep font-semibold'
-                                      : 'bg-white border-brand-primary/15 text-brand-textDark hover:border-brand-primary/40'
+                                      ? 'border-brand-primary bg-brand-soft/50 ring-1 ring-brand-primary/30 text-brand-deep'
+                                      : 'border-brand-primary/15 bg-white text-brand-textDark hover:border-brand-primary/40 hover:bg-brand-soft/10'
                                   }`}
+                                  aria-selected={isSelected}
                                 >
-                                  <div>
-                                    <p className="text-sm font-medium">{srv.title}</p>
-                                    <p className="text-[11px] text-brand-textMuted line-clamp-1">{srv.tagline}</p>
+                                  <div className="min-w-0 pr-3">
+                                    <p className="text-xs sm:text-sm font-semibold truncate">
+                                      {srv.title}
+                                    </p>
+                                    <p className="text-[11px] text-brand-textMuted truncate mt-0.5 font-sans">
+                                      {srv.tagline}
+                                    </p>
                                   </div>
-                                  {isSelected && <Check className="w-4 h-4 text-brand-primary shrink-0 ml-2" />}
-                                </div>
+                                  <div
+                                    className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                      isSelected ? 'bg-brand-primary text-white' : 'border border-brand-primary/20 text-transparent'
+                                    }`}
+                                  >
+                                    <Check className="w-3 h-3 stroke-[3]" />
+                                  </div>
+                                </button>
                               );
                             })}
                           </div>
                         </motion.div>
                       )}
 
-                      {/* STEP 2: Date & Real-Time Capacity Time Slots */}
+                      {/* ── STEP 02: WHEN WOULD YOU PREFER TO VISIT? ── */}
                       {step === 2 && (
                         <motion.div
                           key="step-2"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          initial={{ opacity: 0, x: 12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -12 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                           className="space-y-5"
                         >
+                          <div className="mb-2">
+                            <span className="text-[10px] font-mono tracking-widest text-brand-primary uppercase font-bold block mb-1">
+                              STEP 02
+                            </span>
+                            <h3 className="font-serif font-bold text-lg sm:text-xl text-brand-textDark">
+                              When would you prefer to visit?
+                            </h3>
+                            <p className="text-xs text-brand-textMuted font-sans mt-0.5">
+                              Indicate your preferred date and time window.
+                            </p>
+                          </div>
+
+                          {/* Date Selection */}
                           <div>
-                            <div className="flex items-center justify-between mb-2">
-                              <label className="text-sm font-semibold text-brand-textDark flex items-center gap-2">
-                                <Calendar className="w-4 h-4 text-brand-primary" /> Consultation Date:
-                              </label>
-                              <span className="text-[11px] font-mono text-brand-textMuted">Mon – Sat (10am–8pm)</span>
-                            </div>
+                            <label className="text-xs font-semibold text-brand-textDark flex items-center gap-1.5 mb-2">
+                              <Calendar className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Preferred Date</span>
+                            </label>
                             <input
                               type="date"
                               required
@@ -322,67 +319,49 @@ export default function AppointmentSection() {
                                 setFormData({ ...formData, preferredDate: e.target.value });
                                 setErrorMessage('');
                               }}
-                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-textDark text-sm bg-white min-h-[44px]"
+                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-1 focus:ring-brand-primary text-base sm:text-sm text-brand-textDark bg-white min-h-[48px]"
                             />
                           </div>
 
+                          {/* Time Preference Windows */}
                           <div>
-                            <div className="flex items-center justify-between mb-2.5">
-                              <label className="text-sm font-semibold text-brand-textDark flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-brand-primary" /> Select Consultation Slot:
-                              </label>
-                              {loadingSlots ? (
-                                <span className="text-[10px] font-mono text-brand-primary animate-pulse">Checking capacity...</span>
-                              ) : (
-                                <span className="text-[10px] font-mono text-brand-textMuted uppercase tracking-wider">Max 2 patients per slot</span>
-                              )}
-                            </div>
+                            <label className="text-xs font-semibold text-brand-textDark flex items-center gap-1.5 mb-2">
+                              <Clock className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Preferred Time Window</span>
+                            </label>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[280px] overflow-y-auto pr-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-[220px] overflow-y-auto pr-1">
                               {CONSULTATION_TIME_SLOTS.map((slot) => {
-                                const fullLabel = slot.time;
-                                const isSelected = formData.preferredTime === fullLabel;
-                                const slotInfo = slotAvailability[fullLabel];
-                                const spotsRemaining = slotInfo ? slotInfo.spotsRemaining : 2;
-                                const isFull = slotInfo ? !slotInfo.isAvailable : false;
-
+                                const isSelected = formData.preferredTime === slot.time;
                                 return (
-                                  <div
+                                  <button
                                     key={slot.id}
+                                    type="button"
                                     onClick={() => {
-                                      if (isFull) return;
-                                      setFormData({ ...formData, preferredTime: fullLabel });
+                                      setFormData({ ...formData, preferredTime: slot.time });
                                       setErrorMessage('');
                                     }}
-                                    className={`p-3 rounded-xl border transition-all text-left relative ${
-                                      isFull
-                                        ? 'bg-gray-50 border-gray-200 opacity-60 cursor-not-allowed'
-                                        : isSelected
-                                        ? 'bg-brand-soft border-brand-primary ring-2 ring-brand-primary/20 text-brand-deep font-bold cursor-pointer'
-                                        : 'bg-white border-brand-primary/15 text-brand-textDark hover:border-brand-primary/40 cursor-pointer'
+                                    className={`p-3 rounded-xl border text-left transition-all min-h-[48px] flex items-center justify-between touch-manipulation focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary ${
+                                      isSelected
+                                        ? 'border-brand-primary bg-brand-soft/50 ring-1 ring-brand-primary/30 text-brand-deep font-bold'
+                                        : 'border-brand-primary/15 bg-white text-brand-textDark hover:border-brand-primary/40'
                                     }`}
+                                    aria-selected={isSelected}
                                   >
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-xs font-mono font-bold block">{slot.time}</span>
-                                      {/* Capacity Pill */}
-                                      {isFull ? (
-                                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-bold uppercase tracking-tight">
-                                          Full (2/2)
-                                        </span>
-                                      ) : spotsRemaining === 1 ? (
-                                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">
-                                          1 Spot Left
-                                        </span>
-                                      ) : (
-                                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-medium">
-                                          2 Spots Free
-                                        </span>
-                                      )}
+                                    <div>
+                                      <span className="font-mono text-xs font-bold block">{slot.time}</span>
+                                      <span className="text-[10px] text-brand-textMuted block font-sans mt-0.5">
+                                        {slot.period} Window Preference
+                                      </span>
                                     </div>
-                                    <span className="text-[11px] text-brand-textMuted block mt-0.5 font-sans">
-                                      {slot.period} Consultation Window
-                                    </span>
-                                  </div>
+                                    <div
+                                      className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                        isSelected ? 'bg-brand-primary text-white' : 'border border-brand-primary/20 text-transparent'
+                                      }`}
+                                    >
+                                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                    </div>
+                                  </button>
                                 );
                               })}
                             </div>
@@ -390,159 +369,274 @@ export default function AppointmentSection() {
                         </motion.div>
                       )}
 
-                      {/* STEP 3: Patient Details */}
+                      {/* ── STEP 03: YOUR DETAILS ── */}
                       {step === 3 && (
                         <motion.div
                           key="step-3"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          initial={{ opacity: 0, x: 12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -12 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                           className="space-y-4"
                         >
+                          <div className="mb-2">
+                            <span className="text-[10px] font-mono tracking-widest text-brand-primary uppercase font-bold block mb-1">
+                              STEP 03
+                            </span>
+                            <h3 className="font-serif font-bold text-lg sm:text-xl text-brand-textDark">
+                              Your details
+                            </h3>
+                            <p className="text-xs text-brand-textMuted font-sans mt-0.5">
+                              Please share your contact info so we can coordinate your visit.
+                            </p>
+                          </div>
+
                           <div>
-                            <label className="block text-sm font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
-                              <User className="w-4 h-4 text-brand-primary" /> Full Name *
+                            <label className="block text-xs font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
+                              <User className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Full Name *</span>
                             </label>
                             <input
                               type="text"
                               required
+                              autoComplete="name"
                               placeholder="e.g., Ananya Sharma"
                               value={formData.patientName}
                               onChange={(e) => {
                                 setFormData({ ...formData, patientName: e.target.value });
                                 setErrorMessage('');
                               }}
-                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm bg-white min-h-[44px]"
+                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-1 focus:ring-brand-primary text-base sm:text-sm text-brand-textDark bg-white min-h-[48px]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
-                              <Phone className="w-4 h-4 text-brand-primary" /> Phone / WhatsApp Number *
+                            <label className="block text-xs font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
+                              <Phone className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Phone / WhatsApp Number *</span>
                             </label>
                             <input
                               type="tel"
                               required
+                              autoComplete="tel"
                               placeholder="+91 98765 00000"
                               value={formData.patientPhone}
                               onChange={(e) => {
                                 setFormData({ ...formData, patientPhone: e.target.value });
                                 setErrorMessage('');
                               }}
-                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm bg-white min-h-[44px]"
+                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-1 focus:ring-brand-primary text-base sm:text-sm text-brand-textDark bg-white min-h-[48px]"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-sm font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
-                              <MessageSquare className="w-4 h-4 text-brand-primary" /> Dental Symptoms or Specific Concerns (Optional)
+                            <label className="block text-xs font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Email Address (Optional)</span>
+                            </label>
+                            <input
+                              type="email"
+                              autoComplete="email"
+                              placeholder="your.email@domain.com"
+                              value={formData.patientEmail}
+                              onChange={(e) => setFormData({ ...formData, patientEmail: e.target.value })}
+                              className="w-full px-4 py-3 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-1 focus:ring-brand-primary text-base sm:text-sm text-brand-textDark bg-white min-h-[48px]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-xs font-semibold text-brand-textDark mb-1.5 flex items-center gap-1.5">
+                              <MessageSquare className="w-3.5 h-3.5 text-brand-primary" />
+                              <span>Specific Concerns or Questions (Optional)</span>
                             </label>
                             <textarea
-                              rows={3}
-                              placeholder="Describe your toothache, sensitivity, cosmetic goal, or routine check-up request..."
+                              rows={2}
+                              placeholder="Brief note on toothache, routine check-up, aesthetic inquiry..."
                               value={formData.notes}
                               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-                              className="w-full px-4 py-2.5 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-brand-primary text-sm bg-white"
+                              className="w-full px-4 py-2.5 rounded-xl border border-brand-primary/20 focus:outline-none focus:ring-1 focus:ring-brand-primary text-base sm:text-sm text-brand-textDark bg-white"
                             />
                           </div>
                         </motion.div>
                       )}
 
-                      {/* STEP 4: Review & Direct WhatsApp Confirmation */}
+                      {/* ── STEP 04: HOW SHOULD WE REACH YOU? ── */}
                       {step === 4 && (
                         <motion.div
                           key="step-4"
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -8 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                          initial={{ opacity: 0, x: 12 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -12 }}
+                          transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
                           className="space-y-4"
                         >
-                          {/* Request Summary Card */}
-                          <div className="p-5 rounded-2xl bg-brand-soft/70 border border-brand-primary/20 text-xs text-brand-textDark space-y-2.5">
-                            <div className="flex items-center gap-2 pb-2 border-b border-brand-primary/10">
-                              <Sparkles className="w-4 h-4 text-brand-primary" />
-                              <span className="font-bold text-brand-deep uppercase tracking-wider text-xs">
-                                Consultation Request Summary
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 font-sans">
-                              <p><strong className="text-brand-textDark">Treatment:</strong> {formData.treatment}</p>
-                              <p><strong className="text-brand-textDark">Date:</strong> {formData.preferredDate || 'Earliest available'}</p>
-                              <p><strong className="text-brand-textDark">Slot:</strong> {formData.preferredTime}</p>
-                              <p><strong className="text-brand-textDark">Patient:</strong> {formData.patientName}</p>
-                              <p><strong className="text-brand-textDark">Phone:</strong> {formData.patientPhone}</p>
-                              <p><strong className="text-brand-textDark">Direct Coordination:</strong> WhatsApp (+91 99386 74499)</p>
-                            </div>
+                          <div className="mb-2">
+                            <span className="text-[10px] font-mono tracking-widest text-brand-primary uppercase font-bold block mb-1">
+                              STEP 04
+                            </span>
+                            <h3 className="font-serif font-bold text-lg sm:text-xl text-brand-textDark">
+                              How should we reach you?
+                            </h3>
+                            <p className="text-xs text-brand-textMuted font-sans mt-0.5">
+                              Choose your preferred channel for consultation confirmation.
+                            </p>
                           </div>
 
-                          <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200 text-emerald-800 text-xs flex items-start gap-2.5">
-                            <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                            <p className="leading-relaxed">
-                              Clicking <strong>Confirm &amp; Send on WhatsApp</strong> will automatically log your appointment and open WhatsApp to <strong>+91 99386 74499</strong> with your full details pre-filled.
-                            </p>
+                          {/* Contact Channels */}
+                          <div className="space-y-2">
+                            {[
+                              { id: 'WhatsApp', label: 'WhatsApp', desc: 'Direct message with pre-filled consultation request details', icon: MessageSquare },
+                              { id: 'Phone Call', label: 'Phone Call', desc: 'Direct voice confirmation from our clinical coordinator', icon: PhoneCall },
+                              { id: 'Email', label: 'Email', desc: 'Written appointment preference sent to your inbox', icon: Mail },
+                            ].map((method) => {
+                              const isSelected = formData.contactMethod === method.id;
+                              const IconComponent = method.icon;
+                              return (
+                                <button
+                                  key={method.id}
+                                  type="button"
+                                  onClick={() => setFormData({ ...formData, contactMethod: method.id })}
+                                  className={`w-full p-3.5 sm:p-4 rounded-xl border text-left transition-all min-h-[50px] flex items-center justify-between touch-manipulation focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-primary ${
+                                    isSelected
+                                      ? 'border-brand-primary bg-brand-soft/50 ring-1 ring-brand-primary/30 text-brand-deep'
+                                      : 'border-brand-primary/15 bg-white text-brand-textDark hover:border-brand-primary/40'
+                                  }`}
+                                  aria-selected={isSelected}
+                                >
+                                  <div className="flex items-center gap-3 min-w-0 pr-2">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isSelected ? 'bg-brand-primary text-white' : 'bg-brand-soft text-brand-primary'}`}>
+                                      <IconComponent className="w-4 h-4" />
+                                    </div>
+                                    <div className="min-w-0">
+                                      <p className="text-xs sm:text-sm font-semibold">{method.label}</p>
+                                      <p className="text-[11px] text-brand-textMuted font-sans truncate">{method.desc}</p>
+                                    </div>
+                                  </div>
+
+                                  <div
+                                    className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                                      isSelected ? 'bg-brand-primary text-white' : 'border border-brand-primary/20 text-transparent'
+                                    }`}
+                                  >
+                                    <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                  </div>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* ── Compact Editorial Summary ── */}
+                          <div className="mt-4 pt-3.5 border-t border-brand-primary/15">
+                            <span className="text-[10px] font-mono tracking-widest text-brand-primary uppercase font-bold block mb-2">
+                              REQUEST SUMMARY
+                            </span>
+                            <div className="grid grid-cols-2 gap-2 text-xs font-mono bg-brand-soft/30 p-3 rounded-xl border border-brand-primary/10">
+                              <div>
+                                <span className="text-brand-textMuted block text-[10px]">TREATMENT</span>
+                                <span className="text-brand-textDark font-semibold block truncate">{formData.treatment}</span>
+                              </div>
+                              <div>
+                                <span className="text-brand-textMuted block text-[10px]">PREFERRED DATE</span>
+                                <span className="text-brand-textDark font-semibold block truncate">{formData.preferredDate || 'Earliest'}</span>
+                              </div>
+                              <div>
+                                <span className="text-brand-textMuted block text-[10px]">TIME WINDOW</span>
+                                <span className="text-brand-textDark font-semibold block truncate">{formData.preferredTime}</span>
+                              </div>
+                              <div>
+                                <span className="text-brand-textMuted block text-[10px]">CONFIRMATION VIA</span>
+                                <span className="text-brand-deep font-bold block truncate">{formData.contactMethod}</span>
+                              </div>
+                            </div>
                           </div>
                         </motion.div>
                       )}
+
                     </AnimatePresence>
 
-                    {/* Form Actions */}
-                    <div className="flex items-center justify-between pt-6 border-t border-brand-primary/15 gap-2 sm:gap-3">
+                    {/* Inline Error Message */}
+                    {errorMessage && (
+                      <p className="text-xs text-rose-600 font-medium mt-3 flex items-center gap-1.5 font-sans">
+                        <span>•</span> {errorMessage}
+                      </p>
+                    )}
+
+                    {/* ── Navigation Actions (Back / Continue / Submit) ── */}
+                    <div className="flex items-center justify-between pt-5 mt-4 border-t border-brand-primary/15 gap-3">
                       {step > 1 ? (
                         <button
                           type="button"
                           onClick={handleBack}
-                          className="inline-flex items-center gap-1.5 px-4 py-2.5 min-h-[44px] rounded-full text-xs font-semibold text-brand-textMuted hover:text-brand-textDark hover:bg-brand-soft transition-colors touch-manipulation shrink-0"
+                          className="inline-flex items-center gap-1.5 px-4 py-3 min-h-[48px] rounded-full text-xs font-semibold text-brand-textMuted hover:text-brand-textDark hover:bg-brand-soft transition-colors touch-manipulation focus-visible:outline-none"
                         >
                           <ArrowLeft className="w-3.5 h-3.5" /> Back
                         </button>
-                      ) : <div />}
+                      ) : (
+                        <div />
+                      )}
 
-                      <Button type="submit" variant="primary" size="md" icon={step === 4 ? Check : ArrowRight} disabled={loading} className="shrink-0">
-                        {loading ? 'Connecting...' : step === 4 ? 'Confirm & Send on WhatsApp' : 'Continue'}
-                      </Button>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] rounded-full bg-brand-primary hover:bg-brand-deep text-white text-xs font-bold uppercase tracking-wider shadow-md active:scale-[0.98] transition-all touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary disabled:opacity-50"
+                      >
+                        {loading ? (
+                          'Submitting...'
+                        ) : step === 4 ? (
+                          <>
+                            <span>Submit Request</span>
+                            <Check className="w-3.5 h-3.5" />
+                          </>
+                        ) : (
+                          <>
+                            <span>Continue</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
                     </div>
 
                   </form>
                 </div>
               ) : (
-                /* Submission Success State */
+                /* ── Calm Confirmation / Success State ── */
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.96 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="py-8 text-center space-y-5"
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="py-6 sm:py-10 text-center space-y-4"
                 >
-                  <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border-2 border-emerald-300 shadow-sm">
-                    <Check className="w-8 h-8 text-emerald-700" />
+                  <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border-2 border-emerald-300">
+                    <Check className="w-7 h-7 text-emerald-700 stroke-[2.5]" />
                   </div>
-                  <h3 className="font-serif font-bold text-2xl sm:text-3xl text-brand-textDark">
-                    Consultation Request Registered!
+
+                  <span className="text-[10px] font-mono tracking-[0.25em] text-brand-primary uppercase font-bold block">
+                    REQUEST RECEIVED
+                  </span>
+
+                  <h3 className="font-serif font-bold text-2xl sm:text-3xl text-brand-textDark tracking-tight">
+                    Your consultation preference has been submitted.
                   </h3>
-                  <p className="text-sm text-brand-textMuted max-w-lg mx-auto leading-relaxed font-sans">
-                    Thank you, <strong className="text-brand-textDark">{formData.patientName}</strong>. Your consultation preference for <strong className="text-brand-deep">{formData.treatment}</strong> on <strong className="text-brand-textDark">{formData.preferredDate} ({formData.preferredTime})</strong> has been securely logged.
+
+                  <p className="text-xs sm:text-sm text-brand-textMuted max-w-md mx-auto leading-relaxed font-sans">
+                    Thank you, <strong className="text-brand-textDark">{formData.patientName}</strong>. Our clinical team will reach out via <strong className="text-brand-deep">{formData.contactMethod}</strong> to confirm your appointment for <strong className="text-brand-textDark">{formData.treatment}</strong> on <strong className="text-brand-textDark">{formData.preferredDate} ({formData.preferredTime})</strong>.
                   </p>
 
-                  {/* Direct WhatsApp Reconnect CTA Button */}
-                  <div className="pt-2">
-                    <a
-                      href={createAppointmentWhatsAppUrl(formData)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-sm tracking-wide shadow-lg shadow-emerald-500/25 active:scale-[0.98] transition-all"
+                  <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleReset}
+                      className="px-5 py-3 min-h-[48px] rounded-full border border-brand-primary/20 text-xs font-semibold text-brand-textDark hover:bg-brand-soft/50 transition-colors touch-manipulation"
                     >
-                      <MessageSquare className="w-4 h-4 fill-white text-white" />
-                      <span>Continue to WhatsApp (+91 99386 74499)</span>
+                      Book Another Consultation
+                    </button>
+                    <a
+                      href={`tel:${CLINIC_INFO.phonePrimary}`}
+                      className="px-5 py-3 min-h-[48px] rounded-full bg-brand-primary hover:bg-brand-deep text-white text-xs font-bold uppercase tracking-wider inline-flex items-center justify-center gap-2 shadow-md transition-colors touch-manipulation"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>Call Clinic: {CLINIC_INFO.phonePrimary}</span>
                     </a>
-                  </div>
-
-                  <div className="pt-3 flex flex-col sm:flex-row justify-center gap-3">
-                    <Button onClick={handleReset} variant="secondary" size="md">
-                      Book Another Time
-                    </Button>
-                    <Button href={`tel:${CLINIC_INFO.phonePrimary}`} variant="primary" size="md" icon={Phone}>
-                      Call Direct: {CLINIC_INFO.phonePrimary}
-                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -551,6 +645,7 @@ export default function AppointmentSection() {
           </div>
 
         </div>
+
       </div>
     </section>
   );

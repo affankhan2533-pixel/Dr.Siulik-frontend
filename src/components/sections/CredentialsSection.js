@@ -102,12 +102,11 @@ export default function CredentialsSection() {
           className="mb-6 sm:mb-12 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 items-end"
         >
           <div className="lg:col-span-7">
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
               CREDENTIALS &amp; EDUCATION
             </span>
             <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-brand-textDark leading-tight tracking-tight">
-              Achievements<br />
-              <span className="text-brand-deep italic font-normal">&amp; Certificates.</span>
+              Achievements &amp; Certificates.
             </h2>
           </div>
           <div className="lg:col-span-5">
@@ -196,7 +195,7 @@ export default function CredentialsSection() {
             className="w-full lg:col-span-5"
           >
             <div className="flex items-center justify-between mb-3 px-1">
-              <p className="text-[10px] font-mono font-bold tracking-[0.3em] text-brand-textMuted uppercase">
+              <p className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-textMuted uppercase">
                 CERTIFICATE ARCHIVE ({total})
               </p>
               <span className="text-[10px] font-mono text-brand-primary lg:hidden">

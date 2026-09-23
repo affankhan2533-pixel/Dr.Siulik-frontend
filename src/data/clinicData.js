@@ -1,11 +1,13 @@
 export const CLINIC_INFO = {
   name: "Dr. Siulik's Dental Care",
-  doctorName: "Dr. Siulik Badajena",
+  doctorName: "Dr. Siulik Bandyopadhyay",
   title: "Chief Dental Surgeon",
   tagline: "A Healthier Smile. A More Confident You.",
   subheadline: "Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.",
   address: "Near Chandaka Police Station, Bhubaneswar, Chandaka, Odisha 754012",
   phonePrimary: "+91 99386 74499",
+  phoneClean: "+919938674499",
+  email: "info@drsiulikdental.com",
   whatsappNumber: "919938674499",
   workingHours: [
     { days: "Monday – Sunday", time: "09:00 AM – 01:00 PM & 04:00 PM – 08:30 PM" }

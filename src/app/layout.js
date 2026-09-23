@@ -24,22 +24,10 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL(siteUrl || 'http://localhost:3000'),
-  title: `${CLINIC_INFO.name} | ${CLINIC_INFO.doctorName} - ${CLINIC_INFO.title}`,
-  description: CLINIC_INFO.subheadline,
-  keywords: [
-    "Dr. Siulik Badajena",
-    "Dr Siulik Dental Care",
-    "Modern Dentist",
-    "Implant Dentistry",
-    "Cosmetic Dentist",
-    "Preventive Dental Care",
-    "Teeth Whitening",
-    "Root Canal Treatment",
-  ],
-  alternates: {
-    canonical: siteUrl ? '/' : undefined,
-  },
+  metadataBase: siteUrl ? new URL(siteUrl) : undefined,
+  title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
+  description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
+  alternates: siteUrl ? { canonical: '/' } : undefined,
   robots: {
     index: true,
     follow: true,
@@ -57,26 +45,26 @@ export const metadata = {
     apple: '/assets/branding/logo.png',
   },
   openGraph: {
-    title: `${CLINIC_INFO.name} | ${CLINIC_INFO.doctorName}`,
-    description: CLINIC_INFO.subheadline,
+    title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
+    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
     url: siteUrl || undefined,
     siteName: CLINIC_INFO.name,
     locale: 'en_US',
     type: 'website',
     images: [
       {
-        url: '/assets/branding/logo.png',
-        width: 422,
-        height: 379,
-        alt: `${CLINIC_INFO.name} Authentic Emblem`,
+        url: '/assets/hero/images/image.png',
+        width: 1200,
+        height: 630,
+        alt: `${CLINIC_INFO.name} Consultation Suite`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${CLINIC_INFO.name} | ${CLINIC_INFO.doctorName}`,
-    description: CLINIC_INFO.subheadline,
-    images: ['/assets/branding/logo.png'],
+    title: "Dr. Siulik’s Dental Care | Dentist in Bhubaneswar, Chandaka",
+    description: "Advanced dental care in Chandaka, Bhubaneswar with Dr. Siulik Bandyopadhyay. Personalized dentistry, modern diagnostics, implant care, restorative and cosmetic treatments.",
+    images: ['/assets/hero/images/image.png'],
   },
 };
 
@@ -85,19 +73,54 @@ export default function RootLayout({ children }) {
     '@context': 'https://schema.org',
     '@type': 'Dentist',
     name: CLINIC_INFO.name,
-    image: siteUrl ? `${siteUrl}/assets/branding/logo.png` : undefined,
+    url: siteUrl || undefined,
+    logo: siteUrl ? `${siteUrl}/assets/branding/logo.png` : '/assets/branding/logo.png',
+    image: siteUrl ? `${siteUrl}/assets/hero/images/image.png` : '/assets/hero/images/image.png',
     telephone: CLINIC_INFO.phonePrimary,
     email: CLINIC_INFO.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: CLINIC_INFO.address,
+      streetAddress: 'Near Chandaka Police Station',
       addressLocality: 'Bhubaneswar',
       addressRegion: 'Odisha',
       postalCode: '754012',
       addressCountry: 'IN',
     },
-    openingHours: 'Mo-Su 09:00-13:00 16:00-20:30',
-    priceRange: '$$',
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ],
+        opens: '09:00',
+        closes: '13:00',
+      },
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday',
+        ],
+        opens: '16:00',
+        closes: '20:30',
+      },
+    ],
+    founder: {
+      '@type': 'Person',
+      name: 'Dr. Siulik Bandyopadhyay',
+      jobTitle: 'Founder & Chief Dental Surgeon',
+    },
   };
 
   return (
@@ -106,7 +129,7 @@ export default function RootLayout({ children }) {
         <link
           rel="preload"
           as="image"
-          href="/assets/hero/images/image.webp"
+          href="/assets/hero/images/image.png"
           fetchPriority="high"
         />
         <script

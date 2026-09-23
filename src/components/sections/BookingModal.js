@@ -192,6 +192,9 @@ export default function BookingModal({ isOpen, onClose }) {
           onClick={resetAndClose}
         >
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="booking-modal-title"
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
@@ -215,7 +218,7 @@ export default function BookingModal({ isOpen, onClose }) {
                   <span className="text-xs font-bold text-brand-primary uppercase tracking-wider">
                     Step {step} of 4 — Consultation Request
                   </span>
-                  <h3 className="font-serif font-bold text-2xl text-brand-textDark mt-1">
+                  <h3 id="booking-modal-title" className="font-serif font-bold text-2xl text-brand-textDark mt-1">
                     Schedule Your Consultation
                   </h3>
                   <p className="text-xs text-brand-textMuted mt-1 font-sans">

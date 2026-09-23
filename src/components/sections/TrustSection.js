@@ -6,18 +6,18 @@ export default function TrustSection() {
   const pillars = [
     {
       num: "01",
-      title: "PERSONALIZED",
-      phrase: "Mapped specifically to your oral health and individual goals.",
+      title: "DIGITAL ACCURACY",
+      phrase: "Low-radiation radiography and high-resolution 3D intraoral imaging.",
     },
     {
       num: "02",
-      title: "PRECISE",
-      phrase: "Evidence-based digital diagnostics and clinical accuracy.",
+      title: "STERILE PROTOCOLS",
+      phrase: "Hospital-grade multi-stage autoclave sterilization safeguarding every visit.",
     },
     {
       num: "03",
-      title: "COMFORT-LED",
-      phrase: "A calm setting with gentle technique and transparent guidance.",
+      title: "TRANSPARENT CARE",
+      phrase: "Clear treatment outlines, diagnostic clarity, and unhurried consultation.",
     },
   ];
 
@@ -27,15 +27,15 @@ export default function TrustSection() {
         
         {/* Editorial Statement Line */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-3 sm:pb-6 border-b border-brand-primary/15 gap-1 sm:gap-4">
-          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.25em] text-brand-primary">
-            CLINICAL VALUES
+          <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.16em] text-brand-primary">
+            CLINICAL STANDARDS
           </span>
           <p className="text-xs sm:text-sm text-brand-textMuted font-sans max-w-lg hidden sm:block">
-            Advanced dental technology with thoughtful, individual attention.
+            Evidence-based dental technology paired with dedicated personal attention.
           </p>
         </div>
 
-        {/* Concise Principles — Large typography, fine editorial rules, no cards */}
+        {/* Concise Principles — Clean architectural typography, fine editorial rules */}
         <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-brand-primary/15 pt-4 sm:pt-8">
           {pillars.map((item, idx) => (
             <motion.div
@@ -52,7 +52,7 @@ export default function TrustSection() {
                   <span className="text-[11px] font-mono font-bold tracking-widest text-brand-primary/70 uppercase">
                     {item.num}
                   </span>
-                  <h3 className="font-serif font-bold text-base sm:text-xl lg:text-2xl tracking-wide text-brand-textDark uppercase group-hover:text-brand-deep transition-colors duration-300">
+                  <h3 className="font-sans font-bold text-sm sm:text-base lg:text-lg tracking-wider text-brand-textDark uppercase group-hover:text-brand-deep transition-colors duration-300">
                     {item.title}
                   </h3>
                 </div>

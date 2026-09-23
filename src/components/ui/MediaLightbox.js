@@ -93,6 +93,9 @@ export default function MediaLightbox({
   return (
     <AnimatePresence>
       <motion.div
+        role="dialog"
+        aria-modal="true"
+        aria-label={currentItem?.title || "Fullscreen media viewer"}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}

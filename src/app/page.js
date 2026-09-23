@@ -6,11 +6,9 @@ import HeroSection from '../components/sections/HeroSection';
 import TrustSection from '../components/sections/TrustSection';
 import AboutClinicSection from '../components/sections/AboutClinicSection';
 import MeetDoctorSection from '../components/sections/MeetDoctorSection';
-import PersonalizedApproachSection from '../components/sections/PersonalizedApproachSection';
 import ServicesSection from '../components/sections/ServicesSection';
 import WhyChooseUsSection from '../components/sections/WhyChooseUsSection';
 import TechnologySection from '../components/sections/TechnologySection';
-import ComfortSection from '../components/sections/ComfortSection';
 import BeforeAfterSection from '../components/sections/BeforeAfterSection';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import GoogleReviewsSection from '../components/sections/GoogleReviewsSection';
@@ -50,20 +48,14 @@ export default function Home() {
       {/* 05. Meet Dr. Siulik */}
       <MeetDoctorSection />
 
-      {/* 06. Personalized Approach */}
-      <PersonalizedApproachSection />
-
-      {/* 07. Services (All 7 categories) */}
+      {/* 06. Services (All 7 categories) */}
       <ServicesSection onOpenBooking={handleOpenBooking} />
 
-      {/* 08. Why Choose Us */}
+      {/* 07. The Difference / Care Philosophy (Consolidated Chapter) */}
       <WhyChooseUsSection />
 
-      {/* 09. Technology */}
+      {/* 08. Technology */}
       <TechnologySection />
-
-      {/* 10. Your Comfort Matters */}
-      <ComfortSection />
 
       {/* 11. Before & After (All 5 categories with drag slider) */}
       <BeforeAfterSection />

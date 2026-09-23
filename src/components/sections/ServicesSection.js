@@ -1,193 +1,281 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, ChevronRight } from 'lucide-react';
-import Button from '../ui/Button';
+import { Calendar, ArrowUpRight } from 'lucide-react';
 import { SERVICES_DATA } from '@/data/clinicData';
 
-export default function ServicesSection({ onOpenBooking }) {
-  const [activeTab, setActiveTab] = useState(SERVICES_DATA[0].id);
+const CATEGORIES = [
+  {
+    id: "preventive",
+    num: "01",
+    shortName: "PREVENTIVE",
+    title: "Preventive Dentistry",
+    tagline: "Routine hygiene, diagnostic evaluation, and natural tooth preservation.",
+  },
+  {
+    id: "restorative",
+    num: "02",
+    shortName: "RESTORATIVE",
+    title: "Restorative Dentistry",
+    tagline: "Tooth-colored restorations, composite bonding, and structural repair.",
+  },
+  {
+    id: "surgical",
+    num: "03",
+    shortName: "SURGICAL",
+    title: "Surgical Dentistry",
+    tagline: "Minimally invasive oral surgery performed under strict sterile protocols.",
+  },
+  {
+    id: "cosmetic",
+    num: "04",
+    shortName: "SMILE & COSMETIC",
+    title: "Smile & Cosmetic Dentistry",
+    tagline: "Aesthetic enhancements, porcelain veneers, and enamel contouring.",
+  },
+  {
+    id: "orthodontics",
+    num: "05",
+    shortName: "ORTHODONTICS",
+    title: "Orthodontics",
+    tagline: "Clear aligners and corrective orthodontics for balanced bite alignment.",
+  },
+  {
+    id: "implants",
+    num: "06",
+    shortName: "IMPLANT DENTISTRY",
+    title: "Implant Dentistry",
+    tagline: "Precision titanium root restorations and fixed implant prosthetics.",
+  },
+  {
+    id: "child",
+    num: "07",
+    shortName: "CHILD DENTISTRY",
+    title: "Child Dentistry",
+    tagline: "Specialized pediatric dental care focused on gentle habit development.",
+  },
+];
 
-  const activeService = SERVICES_DATA.find((s) => s.id === activeTab) || SERVICES_DATA[0];
-  const easeEditorial = [0.16, 1, 0.3, 1];
+export default function ServicesSection({ onOpenBooking }) {
+  const [activeTab, setActiveTab] = useState(CATEGORIES[0].id);
+  const railRef = useRef(null);
+
+  const handleCategoryClick = (catId, index) => {
+    setActiveTab(catId);
+    const container = railRef.current;
+    if (container && container.children[index]) {
+      const pill = container.children[index];
+      const targetLeft = pill.offsetLeft - (container.clientWidth / 2) + (pill.clientWidth / 2);
+      container.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0];
+  const serviceData = SERVICES_DATA.find((s) => s.id === activeTab) || SERVICES_DATA[0];
 
   return (
-    <section id="services" className="py-12 sm:py-20 lg:py-24 bg-brand-textDark relative overflow-hidden">
+    <section
+      id="services"
+      className="py-12 sm:py-20 lg:py-24 bg-brand-textDark relative overflow-hidden select-none scroll-mt-24 sm:scroll-mt-28"
+      aria-labelledby="services-kicker"
+    >
+      {/* Ambient Teal Atmospheric Glow */}
+      <div className="teal-ambient-glow -top-24 left-1/4 opacity-10 pointer-events-none" />
+      <div className="teal-ambient-glow -bottom-24 right-1/4 opacity-10 pointer-events-none" />
 
-      {/* Ambient teal glow */}
-      <div className="teal-ambient-glow -top-20 left-1/3 opacity-10 pointer-events-none" />
-      <div className="teal-ambient-glow bottom-0 right-0 opacity-10 pointer-events-none" />
-
-      {/* Fine horizontal rule across the full width */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-brand-aqua/15" />
+      {/* Fine Horizontal Accent Rule */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-brand-aqua/15 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Editorial Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-40px" }}
-          transition={{ duration: 0.65, ease: easeEditorial }}
-          className="mb-8 sm:mb-14 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 items-end"
-        >
-          <div className="lg:col-span-7">
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-aqua uppercase block mb-2 sm:mb-3">
-              COMPREHENSIVE SPECIALTIES
-            </span>
-            <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-white leading-tight tracking-tight">
-              Dental Services<br />
-              <span className="text-brand-aqua italic font-normal">&amp; Treatments.</span>
+        {/* Section Header */}
+        <div className="mb-8 sm:mb-12">
+          <span
+            id="services-kicker"
+            className="text-[10px] sm:text-xs font-mono font-bold tracking-[0.16em] text-brand-aqua uppercase block mb-2"
+          >
+            TREATMENT INDEX
+          </span>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 sm:gap-6">
+            <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-tight">
+              Services &amp; Clinical Disciplines.
             </h2>
-          </div>
-          <div className="lg:col-span-5">
-            <p className="text-sm sm:text-base text-white/70 leading-relaxed font-sans max-w-md">
-              Evidence-based care across seven core disciplines, tailored to your oral health and comfort.
+            <p className="text-xs sm:text-sm text-white/60 font-sans max-w-md leading-relaxed">
+              Evidence-based dental care structured across seven specialized clinical disciplines.
             </p>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Two-Column Layout: Left = Vertical/Horizontal Nav, Right = Service Detail */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+        {/* Mobile Horizontal Swipeable Category Rail */}
+        <div
+          ref={railRef}
+          role="tablist"
+          aria-label="Service Categories"
+          className="flex lg:hidden items-center gap-2 overflow-x-auto pb-3 pt-1 -mx-4 px-4 no-scrollbar snap-x snap-mandatory touch-pan-x mb-5"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          {CATEGORIES.map((cat, idx) => {
+            const isActive = cat.id === activeTab;
+            return (
+              <button
+                key={cat.id}
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => handleCategoryClick(cat.id, idx)}
+                className={`px-4 py-2.5 min-h-[42px] rounded-full text-xs font-mono font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-200 border snap-start shrink-0 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-aqua ${
+                  isActive
+                    ? 'bg-brand-primary text-white border-brand-primary shadow-teal-glow'
+                    : 'bg-white/5 text-white/70 border-white/10 hover:border-brand-aqua/40 hover:text-white'
+                }`}
+              >
+                <span className="text-brand-aqua/80 mr-1.5">{cat.num}</span>
+                <span>{cat.shortName}</span>
+              </button>
+            );
+          })}
+        </div>
 
-          {/* Left: Service Navigation */}
-          <div className="lg:col-span-4">
-            
-            {/* Mobile: Touch-Friendly Horizontal Scroll Pills with Smooth Momentum */}
-            <div
-              className="flex lg:hidden items-center gap-2 overflow-x-auto pb-2 pt-1 -mx-4 px-4 no-scrollbar mb-3 snap-x touch-pan-x"
-              style={{ WebkitOverflowScrolling: 'touch' }}
-            >
-              {SERVICES_DATA.map((service) => {
-                const isActive = service.id === activeTab;
-                const shortNames = {
-                  preventive: 'PREVENTIVE',
-                  restorative: 'RESTORATIVE',
-                  surgical: 'SURGICAL',
-                  cosmetic: 'COSMETIC',
-                  orthodontics: 'ORTHODONTICS',
-                  implants: 'IMPLANT',
-                  child: 'CHILD'
-                };
-                const displayLabel = shortNames[service.id] || service.title;
-                return (
-                  <button
-                    key={service.id}
-                    onClick={(e) => {
-                      setActiveTab(service.id);
-                      e.currentTarget.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }}
-                    className={`px-3.5 py-2 min-h-[38px] rounded-full text-[11px] font-bold tracking-wider uppercase whitespace-nowrap transition-all duration-300 border touch-manipulation snap-start shrink-0 focus:outline-none ${
-                      isActive
-                        ? 'bg-brand-primary text-white border-brand-primary shadow-teal-glow'
-                        : 'bg-white/5 text-white/70 border-white/10 hover:border-brand-aqua/40 hover:text-white'
+        {/* ── Two-Zone Editorial Grid: Left Index / Right Treatment Panel ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-start">
+
+          {/* ── Left Column (Desktop): Numbered Category Navigation Index ── */}
+          <div
+            role="tablist"
+            aria-label="Clinical Disciplines"
+            className="hidden lg:flex lg:col-span-5 xl:col-span-5 flex-col border-t border-white/10 divide-y divide-white/10"
+          >
+            {CATEGORIES.map((cat) => {
+              const isActive = cat.id === activeTab;
+              return (
+                <button
+                  key={cat.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveTab(cat.id)}
+                  onMouseEnter={() => setActiveTab(cat.id)}
+                  className={`w-full py-4 text-left transition-all duration-200 group flex items-start gap-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-brand-aqua ${
+                    isActive
+                      ? 'pl-4 border-l-2 border-brand-aqua'
+                      : 'pl-0 border-l-2 border-transparent hover:pl-2'
+                  }`}
+                >
+                  <span
+                    className={`font-mono text-xs font-bold tracking-widest pt-1 transition-colors duration-200 ${
+                      isActive ? 'text-brand-aqua' : 'text-white/30 group-hover:text-brand-aqua/70'
                     }`}
                   >
-                    {displayLabel}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Desktop: Vertical fine-line list with responsive hover states */}
-            <div className="hidden lg:block border border-brand-aqua/15 rounded-2xl overflow-hidden bg-brand-textDark/80">
-              {SERVICES_DATA.map((service, idx) => {
-                const isActive = service.id === activeTab;
-                return (
-                  <button
-                    key={service.id}
-                    onClick={() => setActiveTab(service.id)}
-                    className={`w-full text-left px-5 py-4 flex items-center justify-between group transition-all duration-300 border-b border-brand-aqua/10 last:border-b-0 focus:outline-none focus:bg-white/10 ${
-                      isActive
-                        ? 'bg-brand-primary/20 border-l-[3px] border-l-brand-aqua'
-                        : 'hover:bg-white/5'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3.5">
-                      <span className={`text-[10px] font-mono font-bold transition-all duration-300 ${
-                        isActive ? 'text-brand-aqua translate-x-0.5' : 'text-white/30 group-hover:text-white/60 group-hover:translate-x-1'
-                      }`}>
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span className={`font-sans font-medium text-sm transition-colors ${
-                        isActive ? 'text-white font-semibold' : 'text-white/65 group-hover:text-white/90'
-                      }`}>
-                        {service.title}
-                      </span>
-                    </div>
-                    <ChevronRight className={`w-3.5 h-3.5 transition-all duration-300 ${
-                      isActive ? 'text-brand-aqua opacity-100 translate-x-1' : 'text-white/20 group-hover:text-white/60 group-hover:translate-x-1'
-                    }`} />
-                  </button>
-                );
-              })}
-            </div>
+                    {cat.num}
+                  </span>
+                  <div className="flex-1">
+                    <span
+                      className={`font-serif text-lg xl:text-xl font-bold tracking-tight block transition-all duration-200 ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-white/50 group-hover:text-white/85 group-hover:translate-x-1'
+                      }`}
+                    >
+                      {cat.title}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Right: Editorial Service Detail Panel */}
-          <div className="lg:col-span-8">
+          {/* ── Right Column: Active Category Experience ── */}
+          <div className="lg:col-span-7 xl:col-span-7">
             <AnimatePresence mode="wait">
               <motion.div
-                key={activeService.id}
-                initial={{ opacity: 0, y: 14 }}
+                key={activeTab}
+                role="tabpanel"
+                id={`panel-${currentCategory.id}`}
+                aria-labelledby={`tab-${currentCategory.id}`}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.35, ease: easeEditorial }}
-                className="h-full"
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                className="relative bg-brand-textDark/90 border border-brand-aqua/15 rounded-xl sm:rounded-2xl p-5 sm:p-8 lg:p-10 overflow-hidden"
               >
-                {/* Service Main Panel */}
-                <div className="rounded-2xl border border-brand-aqua/15 overflow-hidden">
+                {/* Large Subtle Editorial Watermark Index Number */}
+                <span
+                  aria-hidden="true"
+                  className="absolute top-2 right-4 sm:top-4 sm:right-6 text-6xl sm:text-7xl lg:text-8xl font-serif font-black text-white/[0.04] pointer-events-none select-none"
+                >
+                  {currentCategory.num}
+                </span>
 
-                  {/* Top Band: Service Identity */}
-                  <div
-                    className="p-4 sm:p-8 border-b border-brand-aqua/10"
-                    style={{ background: 'rgba(8, 47, 53, 0.95)' }}
-                  >
-                    <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-brand-aqua uppercase block mb-1 sm:mb-2">
-                      {activeService.tagline}
+                {/* Category Header */}
+                <div className="relative z-10 mb-6">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="font-mono text-xs font-bold text-brand-aqua tracking-widest">
+                      {currentCategory.num}
                     </span>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2 sm:mb-3">
-                      <h3 className="font-serif font-bold text-xl sm:text-3xl text-white leading-tight">
-                        {activeService.title}
-                      </h3>
-                      <button
-                        onClick={onOpenBooking}
-                        className="self-start sm:self-auto px-4 py-2 rounded-full bg-brand-primary hover:bg-brand-deep text-white text-xs font-bold uppercase tracking-wider transition-colors inline-flex items-center gap-1.5 shrink-0"
-                      >
-                        <Calendar className="w-3.5 h-3.5" /> Book Consultation
-                      </button>
-                    </div>
-                    <p className="text-xs sm:text-base text-white/70 leading-relaxed font-sans max-w-xl">
-                      {activeService.description}
-                    </p>
+                    <span className="text-white/30 text-xs">•</span>
+                    <span className="font-mono text-[10px] sm:text-xs font-bold text-brand-aqua uppercase tracking-[0.16em]">
+                      {currentCategory.shortName}
+                    </span>
                   </div>
-
-                  {/* Bottom Band: Treatments Grid */}
-                  <div className="p-3.5 sm:p-6" style={{ background: 'rgba(8, 47, 53, 0.6)' }}>
-                    <p className="text-[10px] font-mono font-bold tracking-[0.25em] text-white/45 uppercase mb-2.5 sm:mb-4">
-                      INCLUDED PROCEDURES &amp; CARE
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-px sm:bg-brand-aqua/10 sm:rounded-xl overflow-hidden sm:border sm:border-brand-aqua/10">
-                      {activeService.treatments.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="p-2.5 sm:p-4 rounded-lg sm:rounded-none group hover:bg-brand-primary/10 transition-colors duration-200 border border-brand-aqua/10 sm:border-none"
-                          style={{ background: 'rgba(8, 47, 53, 0.88)' }}
-                        >
-                          <div className="flex items-start gap-2.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-brand-aqua mt-1.5 shrink-0" />
-                            <div>
-                              <h5 className="font-sans font-semibold text-xs sm:text-sm text-white">{item.name}</h5>
-                              <p className="text-[11px] sm:text-xs text-white/60 leading-relaxed font-sans mt-0.5">{item.desc}</p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
+                  <h3 className="font-serif font-bold text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+                    {currentCategory.title}
+                  </h3>
+                  <p className="font-sans text-xs sm:text-sm text-white/70 max-w-xl leading-relaxed mt-2">
+                    {currentCategory.tagline}
+                  </p>
                 </div>
+
+                {/* Treatment List in Clean Editorial Rows */}
+                <div className="relative z-10 divide-y divide-white/10 border-t border-b border-white/10">
+                  {serviceData.treatments.map((treatment, idx) => (
+                    <div
+                      key={treatment.name}
+                      className="group py-3.5 sm:py-4 flex items-center justify-between cursor-default transition-colors duration-200"
+                    >
+                      <div className="pr-4">
+                        <h4 className="font-sans text-sm sm:text-base text-white font-medium group-hover:text-brand-aqua transition-colors duration-200 flex items-center gap-2">
+                          <span>{treatment.name}</span>
+                          <span className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-200 text-brand-aqua text-xs">
+                            →
+                          </span>
+                        </h4>
+                        {treatment.desc && (
+                          <p className="text-[11px] sm:text-xs text-white/50 font-sans mt-0.5 max-w-md group-hover:text-white/70 transition-colors">
+                            {treatment.desc}
+                          </p>
+                        )}
+                      </div>
+                      <span className="font-mono text-xs font-bold tracking-widest text-brand-aqua/40 group-hover:text-brand-aqua transition-colors shrink-0">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Compact Service CTA */}
+                <div className="relative z-10 mt-6 sm:mt-8 pt-4 sm:pt-5 flex items-center justify-between flex-wrap gap-4">
+                  <a
+                    href="#book-appointment"
+                    onClick={(e) => {
+                      if (onOpenBooking) {
+                        e.preventDefault();
+                        onOpenBooking();
+                      }
+                    }}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full bg-brand-primary hover:bg-brand-deep text-white font-sans font-bold text-xs uppercase tracking-wider transition-all duration-300 shadow-teal-glow hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-aqua"
+                  >
+                    <Calendar className="w-3.5 h-3.5" />
+                    <span>BOOK THIS CONSULTATION</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 opacity-80" />
+                  </a>
+
+                  <span className="text-[10px] sm:text-[11px] font-mono text-white/40 tracking-wider">
+                    COMPREHENSIVE CLINICAL CARE
+                  </span>
+                </div>
+
               </motion.div>
             </AnimatePresence>
           </div>

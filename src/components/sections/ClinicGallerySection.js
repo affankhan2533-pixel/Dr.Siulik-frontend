@@ -48,7 +48,7 @@ function GalleryCard({ item, index, onOpen }) {
 
       {/* Bottom Details (Concise) */}
       <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 pointer-events-none">
-        <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-brand-aqua uppercase block mb-1">
+        <span className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-aqua uppercase block mb-1">
           {item.category}
         </span>
         <h3 className="font-serif font-bold text-base sm:text-xl text-white leading-snug line-clamp-2">
@@ -99,7 +99,7 @@ export default function ClinicGallerySection() {
           className="mb-6 sm:mb-12 grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-8 items-end"
         >
           <div className="lg:col-span-7">
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.25em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
               CLINIC SPACES
             </span>
             <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-brand-textDark leading-tight tracking-tight">

@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Next.js Build Output
+.next/
+out/
+build/
+dist/
+
+# Scratch & Temporary Testing Files
+.temp_chrome*
+frontend/.temp_chrome*
+stream_*.txt
+*.log
+
+# Environment Files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.example
+
+# Vercel
+.vercel
+
+# System / OS
+.DS_Store
+Thumbs.db

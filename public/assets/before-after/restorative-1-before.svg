@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <rect width="800" height="600" fill="#006C73" opacity="0.9"/>
+  <rect x="30" y="30" width="740" height="540" rx="16" fill="#082F35" opacity="0.8" stroke="#08A6A8" stroke-width="2"/>
+  <text x="400" y="280" font-family="'Playfair Display', serif" font-weight="700" font-size="28" fill="#E8F8F8" text-anchor="middle">Restorative Dentistry (Before)</text>
+  <text x="400" y="330" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" fill="#5ED7D5" text-anchor="middle">Initial Tooth Structure</text>
+  <rect x="40" y="500" width="160" height="40" rx="8" fill="#006C73"/>
+  <text x="65" y="525" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="14" fill="#FFFFFF">BEFORE</text>
+</svg>

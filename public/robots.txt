@@ -1,0 +1,6 @@
+# Dr. Siulik's Dental Care - Production Robots Configuration
+User-agent: *
+Allow: /
+
+# Disallow sensitive internal or API routes
+Disallow: /api/

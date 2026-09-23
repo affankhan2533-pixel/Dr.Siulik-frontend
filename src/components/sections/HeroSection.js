@@ -68,6 +68,21 @@ export default function HeroSection({ onOpenBooking }) {
         />
       )}
 
+      {/* ── LOGO COVER — hides AI watermark in bottom-right corner of video ── */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          width: '80px',
+          height: '80px',
+          background: 'linear-gradient(135deg, transparent 30%, rgba(10,30,30,0.92) 60%)',
+          pointerEvents: 'none',
+          zIndex: 2,
+        }}
+      />
+
       {/* ── CINEMATIC OVERLAY — multi-layer for legibility without killing video ── */}
       <div
         className="hero-overlay"

@@ -6,6 +6,7 @@ import HeroSection from '../components/sections/HeroSection';
 import TrustSection from '../components/sections/TrustSection';
 import AboutClinicSection from '../components/sections/AboutClinicSection';
 import MeetDoctorSection from '../components/sections/MeetDoctorSection';
+import MentorSection from '../components/sections/MentorSection';
 import ServicesSection from '../components/sections/ServicesSection';
 import WhyChooseUsSection from '../components/sections/WhyChooseUsSection';
 import TechnologySection from '../components/sections/TechnologySection';
@@ -47,6 +48,9 @@ export default function Home() {
 
       {/* 05. Meet Dr. Siulik */}
       <MeetDoctorSection />
+
+      {/* 05b. Mentor & Inspiration */}
+      <MentorSection />
 
       {/* 06. Services (All 7 categories) */}
       <ServicesSection onOpenBooking={handleOpenBooking} />

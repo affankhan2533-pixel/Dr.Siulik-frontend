@@ -5,10 +5,10 @@ export const CLINIC_INFO = {
   tagline: "A Healthier Smile. A More Confident You.",
   subheadline: "Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.",
   address: "Near Chandaka Police Station, Bhubaneswar, Chandaka, Odisha 754012",
-  phonePrimary: "+91 99386 74499",
+  phonePrimary: "+91 9938674499",
   phoneClean: "+919938674499",
-  email: "info@drsiulikdental.com",
-  whatsappNumber: "919938674499",
+  email: "siulikbadajena35@gmail.com",
+  whatsappNumber: "917008675007",
   workingHours: [
     { days: "Monday – Sunday", time: "09:00 AM – 01:00 PM & 04:00 PM – 08:30 PM" }
   ],
@@ -228,14 +228,14 @@ export const CERTIFICATES_DATA = [
     id: "c1",
     title: "Advanced Endodontics & Clinical Protocols",
     issuer: "Indian Dental Association (IDA) Odisha State Branch",
-    year: "2024",
+    year: "2026",
     image: "/assets/awards/certificates/image copy.webp",
   },
   {
     id: "c2",
     title: "Occlusion Driven Dentistry",
     issuer: "Indian Dental Association (IDA) Odisha State Branch",
-    year: "2024",
+    year: "2026",
     image: "/assets/awards/certificates/image copy 2.webp",
   },
   {
@@ -266,6 +266,51 @@ export const CERTIFICATES_DATA = [
     year: "2022",
     image: "/assets/awards/certificates/image.webp",
   },
+];
+
+export const CLINICAL_EDUCATORS_DATA = [
+  {
+    id: "educator-gopikrishna",
+    name: "Dr. V. Gopikrishna",
+    course: "Basic to Advanced Endodontics",
+    image: "/assets/awards/achievements/image.webp",
+  },
+  {
+    id: "educator-garima",
+    name: "Dr. Garima Poddar",
+    course: "Basic to Advanced Endodontics",
+    image: "/assets/awards/achievements/image copy.webp",
+  },
+  {
+    id: "educator-shaleen",
+    name: "Dr. Shaleen Khetarpal",
+    course: "Contemporary Clinical Dentistry",
+    image: "/assets/awards/achievements/image copy 2.webp",
+  },
+  {
+    id: "educator-vishal",
+    name: "Dr. Vishal Gandhi",
+    course: "Advanced Endodontic Practice",
+    image: "/assets/awards/achievements/image copy 3.webp",
+  },
+  {
+    id: "educator-ramesh",
+    name: "Dr. Ramesh Selvam & Dr. Malarvizhi Ramesh",
+    course: "Continuing Dental Education",
+    image: "/assets/awards/achievements/image copy 4.webp",
+  },
+  {
+    id: "educator-aswini",
+    name: "Dr. Aswini Bhalerao",
+    course: "Clinical Excellence & Patient-Centred Care",
+    image: "/assets/awards/achievements/image copy 5.webp",
+  },
+];
+
+export const LEARNING_CIRCLE_NAMES = [
+  "Dr. Suhas Lele",
+  "Dr. Abdul Minam",
+  "Dr. Komal Majumdar",
 ];
 
 export const CLINIC_GALLERY = [

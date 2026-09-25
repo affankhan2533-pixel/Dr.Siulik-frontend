@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { CERTIFICATES_DATA } from '@/data/clinicData';
+import { CERTIFICATES_DATA, CLINICAL_EDUCATORS_DATA, LEARNING_CIRCLE_NAMES } from '@/data/clinicData';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 
@@ -78,6 +78,8 @@ function CertificateRailItem({ cert, index, isActive, onSelect, onOpen }) {
 
 export default function CredentialsSection() {
   const [featured, setFeatured] = useState(0);
+  const [educatorLightboxOpen, setEducatorLightboxOpen] = useState(false);
+  const [activeEducator, setActiveEducator] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const easeEditorial = [0.16, 1, 0.3, 1];
 
@@ -86,6 +88,10 @@ export default function CredentialsSection() {
 
   const goPrev = () => setFeatured((i) => (i - 1 + total) % total);
   const goNext = () => setFeatured((i) => (i + 1) % total);
+  const openEducator = (index) => {
+    setActiveEducator(index);
+    setEducatorLightboxOpen(true);
+  };
 
   return (
     <section id="credentials" className="py-10 sm:py-20 lg:py-24 bg-brand-soft/30 relative overflow-hidden">
@@ -229,6 +235,81 @@ export default function CredentialsSection() {
 
         </div>
 
+        {/* Professional development story */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.7, ease: easeEditorial }}
+          className="mt-14 sm:mt-20 border-t border-brand-primary/15 pt-8 sm:pt-10"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-10 items-end mb-6 sm:mb-8">
+            <div className="lg:col-span-7">
+              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-2">
+                LEARNING IN PRACTICE
+              </span>
+              <h3 className="font-serif font-bold text-2xl sm:text-3xl lg:text-4xl text-brand-textDark leading-tight tracking-tight">
+                The best lessons stay with you.
+              </h3>
+            </div>
+            <p className="lg:col-span-5 text-xs sm:text-base text-brand-textMuted leading-relaxed max-w-lg">
+              Each course, conversation, and shared case adds something to the way we think. These are the clinicians whose generosity keeps our hands precise and our care grounded.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
+            {CLINICAL_EDUCATORS_DATA.map((educator, index) => (
+              <button
+                key={educator.id}
+                type="button"
+                onClick={() => openEducator(index)}
+                className="group text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-xl"
+              >
+                <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-brand-soft border border-brand-primary/15">
+                  <img
+                    src={educator.image}
+                    alt={`${educator.name}, ${educator.course}`}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 hidden lg:flex translate-y-3 flex-col justify-end bg-gradient-to-t from-black/80 via-black/35 to-transparent px-4 pb-4 pt-14 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+                    <span className="text-[9px] font-mono font-bold tracking-[0.14em] text-brand-aqua uppercase">
+                      {educator.course}
+                    </span>
+                    <span className="mt-1 font-serif text-base font-bold leading-tight text-white">
+                      {educator.name}
+                    </span>
+                  </div>
+                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.65 }}
+                  transition={{ duration: 0.55, delay: index * 0.08, ease: easeEditorial }}
+                  className="lg:hidden pt-3"
+                >
+                  <span className="block text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.14em] text-brand-primary uppercase">
+                    {educator.course}
+                  </span>
+                  <span className="mt-1 block font-serif text-sm sm:text-base font-bold text-brand-textDark leading-tight">
+                    {educator.name}
+                  </span>
+                </motion.div>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-7 sm:mt-9 pt-5 border-t border-brand-primary/10 flex flex-col sm:flex-row gap-2 sm:gap-6 sm:items-center">
+            <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase shrink-0">
+              CONTINUING CONVERSATION
+            </span>
+            <p className="text-xs sm:text-sm text-brand-textMuted leading-relaxed">
+              Learning and exchange with {LEARNING_CIRCLE_NAMES.join(", ")}.
+            </p>
+          </div>
+        </motion.div>
+
       </div>
 
       {/* Reusable Fullscreen Media Lightbox with Uncropped object-contain */}
@@ -238,6 +319,13 @@ export default function CredentialsSection() {
         items={CERTIFICATES_DATA}
         currentIndex={featured}
         onIndexChange={setFeatured}
+      />
+      <MediaLightbox
+        isOpen={educatorLightboxOpen}
+        onClose={() => setEducatorLightboxOpen(false)}
+        items={CLINICAL_EDUCATORS_DATA}
+        currentIndex={activeEducator}
+        onIndexChange={setActiveEducator}
       />
     </section>
   );

@@ -1,5 +1,5 @@
-export const CLINIC_WHATSAPP_NUMBER = "919938674499";
-export const CLINIC_DISPLAY_PHONE = "+91 99386 74499";
+export const CLINIC_WHATSAPP_NUMBER = "917008675007";
+export const CLINIC_DISPLAY_PHONE = "+91 9938674499";
 
 /**
  * Builds direct WhatsApp URL with pre-filled patient appointment details.

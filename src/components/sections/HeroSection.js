@@ -100,6 +100,12 @@ export default function HeroSection({ onOpenBooking }) {
               </span>
             </h1>
 
+            <div className="mb-3 sm:mb-4">
+              <span className="inline-block font-serif text-lg sm:text-2xl lg:text-3xl font-extrabold italic tracking-[0.04em] text-[#F4D39A] drop-shadow-[0_2px_18px_rgba(244,211,154,0.35)]">
+                “Painless dentistry”
+              </span>
+            </div>
+
             {/* Single Approved Supporting Line */}
             <p className="text-xs sm:text-base text-white/85 leading-relaxed font-sans mb-4 sm:mb-8 max-w-[480px]">
               Advanced, personalized dental care designed around your comfort, confidence, and long-term oral health.

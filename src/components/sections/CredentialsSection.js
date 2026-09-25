@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
-import { CERTIFICATES_DATA, CLINICAL_EDUCATORS_DATA, LEARNING_CIRCLE_NAMES } from '@/data/clinicData';
+import { ACHIEVEMENTS_DATA } from '@/data/clinicData';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
 
-function FeaturedCertificateViewer({ cert, onOpen }) {
+function FeaturedAchievementViewer({ item, onOpen }) {
   const tapHandlers = useTapVsSwipe(onOpen);
 
   return (
@@ -16,13 +16,13 @@ function FeaturedCertificateViewer({ cert, onOpen }) {
       className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-brand-primary/20 bg-white shadow-xl cursor-pointer group p-3 sm:p-5 flex items-center justify-center"
     >
       <img
-        src={cert.image}
-        alt={cert.title}
+        src={item.image}
+        alt={`${item.name} — ${item.title}`}
         loading="lazy"
         decoding="async"
-        className="w-full h-auto object-contain max-h-[380px] sm:max-h-[460px] group-hover:scale-[1.015] transition-transform duration-500"
+        className="w-full h-auto object-contain max-h-[360px] sm:max-h-[440px] group-hover:scale-[1.015] transition-transform duration-500"
       />
-      {/* Expand hint */}
+      {/* Expand hint button */}
       <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-brand-deep text-brand-aqua flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
         <ZoomIn className="w-5 h-5" />
       </div>
@@ -31,7 +31,7 @@ function FeaturedCertificateViewer({ cert, onOpen }) {
   );
 }
 
-function CertificateRailItem({ cert, index, isActive, onSelect, onOpen }) {
+function ArchiveListItem({ item, index, isActive, onSelect, onOpen }) {
   const tapHandlers = useTapVsSwipe(() => {
     onSelect(index);
   });
@@ -40,18 +40,17 @@ function CertificateRailItem({ cert, index, isActive, onSelect, onOpen }) {
     <button
       type="button"
       {...tapHandlers}
-      className={`w-[75vw] sm:w-[320px] lg:w-full text-left flex items-center gap-3.5 rounded-2xl border p-3 sm:p-3.5 transition-all duration-300 group touch-manipulation snap-start shrink-0 lg:shrink focus:outline-none focus:ring-2 focus:ring-brand-primary ${
+      className={`w-full text-left flex items-center gap-3.5 rounded-2xl border p-3 sm:p-3.5 transition-all duration-300 group touch-manipulation focus:outline-none focus:ring-2 focus:ring-brand-primary ${
         isActive
           ? 'border-brand-primary/50 bg-white shadow-soft ring-1 ring-brand-primary/20'
           : 'border-brand-primary/15 bg-white/70 hover:border-brand-primary/30 hover:bg-white'
       }`}
-      style={{ scrollSnapAlign: 'start' }}
     >
       {/* Recognizable Thumbnail Preview */}
-      <div className="w-20 h-16 sm:w-24 sm:h-18 rounded-xl overflow-hidden border border-brand-primary/20 bg-brand-soft/30 shrink-0 p-1 flex items-center justify-center">
+      <div className="w-20 h-16 sm:w-24 sm:h-18 rounded-xl overflow-hidden border border-brand-primary/20 bg-brand-soft/40 shrink-0 p-1 flex items-center justify-center">
         <img
-          src={cert.image}
-          alt={cert.title}
+          src={item.image}
+          alt={item.name}
           loading="lazy"
           className="w-full h-full object-contain"
         />
@@ -59,38 +58,105 @@ function CertificateRailItem({ cert, index, isActive, onSelect, onOpen }) {
 
       {/* Info */}
       <div className="min-w-0 flex-1">
-        <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-brand-primary uppercase block truncate">
-          {cert.year} &middot; {cert.issuer}
+        <span className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block truncate">
+          {item.year} &middot; {item.name}
         </span>
-        <p className={`font-sans text-xs sm:text-sm font-semibold mt-0.5 leading-snug line-clamp-2 ${
-          isActive ? 'text-brand-textDark font-bold' : 'text-brand-textMuted group-hover:text-brand-textDark'
-        }`}>
-          {cert.title}
+        <p
+          className={`font-sans text-xs sm:text-sm font-semibold mt-0.5 leading-snug line-clamp-2 ${
+            isActive ? 'text-brand-textDark font-bold' : 'text-brand-textMuted group-hover:text-brand-textDark'
+          }`}
+        >
+          {item.title}
         </p>
+        <span className="text-[10px] font-sans text-brand-textMuted/80 block truncate mt-0.5">
+          {item.issuer}
+        </span>
       </div>
 
       {isActive && (
-        <span className="w-2 h-2 rounded-full bg-brand-primary shrink-0" />
+        <span className="w-2.5 h-2.5 rounded-full bg-brand-primary shrink-0 mr-1" />
       )}
     </button>
   );
 }
 
+function PhotoRailCard({ item, index, isActive, onSelect, onOpen }) {
+  const tapHandlers = useTapVsSwipe(() => {
+    onSelect(index);
+    onOpen(index);
+  });
+
+  return (
+    <div
+      {...tapHandlers}
+      className={`w-[88vw] sm:w-[320px] lg:w-[340px] shrink-0 snap-start rounded-2xl bg-white border p-3.5 flex flex-col justify-between transition-all duration-300 cursor-pointer group shadow-sm hover:shadow-md touch-manipulation ${
+        isActive
+          ? 'border-brand-primary/60 ring-2 ring-brand-primary/20'
+          : 'border-brand-primary/15 hover:border-brand-primary/35'
+      }`}
+      style={{ scrollSnapAlign: 'start' }}
+    >
+      {/* Photo Frame */}
+      <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-brand-soft/40 border border-brand-primary/15 p-1.5 flex items-center justify-center">
+        <img
+          src={item.image}
+          alt={`${item.name} — ${item.title}`}
+          loading="lazy"
+          decoding="async"
+          className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-500"
+        />
+        <div className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-brand-deep/80 text-brand-aqua flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+          <ZoomIn className="w-4 h-4" />
+        </div>
+      </div>
+
+      {/* Card Details */}
+      <div className="mt-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase truncate">
+            {item.year} &middot; {item.name}
+          </span>
+          <span className="text-[10px] font-mono text-brand-textMuted shrink-0">
+            #{index + 1}
+          </span>
+        </div>
+        <h4 className="font-sans font-bold text-xs sm:text-sm text-brand-textDark mt-1 leading-snug line-clamp-2">
+          {item.title}
+        </h4>
+        {item.description && (
+          <p className="text-[11px] font-sans text-brand-textMuted mt-1">
+            {item.description}
+          </p>
+        )}
+        <p className="text-[10px] font-sans text-brand-textMuted/80 mt-1 truncate">
+          {item.issuer}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function CredentialsSection() {
-  const [featured, setFeatured] = useState(0);
-  const [educatorLightboxOpen, setEducatorLightboxOpen] = useState(false);
-  const [activeEducator, setActiveEducator] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const railRef = useRef(null);
   const easeEditorial = [0.16, 1, 0.3, 1];
 
-  const featuredCert = CERTIFICATES_DATA[featured];
-  const total = CERTIFICATES_DATA.length;
+  const currentItem = ACHIEVEMENTS_DATA[activeIdx] || ACHIEVEMENTS_DATA[0];
+  const total = ACHIEVEMENTS_DATA.length;
 
-  const goPrev = () => setFeatured((i) => (i - 1 + total) % total);
-  const goNext = () => setFeatured((i) => (i + 1) % total);
-  const openEducator = (index) => {
-    setActiveEducator(index);
-    setEducatorLightboxOpen(true);
+  const goPrev = () => setActiveIdx((i) => (i - 1 + total) % total);
+  const goNext = () => setActiveIdx((i) => (i + 1) % total);
+
+  const openLightboxAt = (index) => {
+    setActiveIdx(index);
+    setLightboxOpen(true);
+  };
+
+  const scrollRail = (direction) => {
+    if (!railRef.current) return;
+    const scrollAmount = direction === 'next' ? 340 : -340;
+    railRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
   return (
@@ -109,7 +175,7 @@ export default function CredentialsSection() {
         >
           <div className="lg:col-span-7">
             <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-1.5 sm:mb-3">
-              CREDENTIALS &amp; EDUCATION
+              CREDENTIALS &amp; CONTINUING EDUCATION
             </span>
             <h2 className="font-serif font-bold text-2xl sm:text-4xl lg:text-5xl text-brand-textDark leading-tight tracking-tight">
               Achievements &amp; Certificates.
@@ -117,15 +183,15 @@ export default function CredentialsSection() {
           </div>
           <div className="lg:col-span-5">
             <p className="text-xs sm:text-base text-brand-textMuted leading-relaxed font-sans max-w-md">
-              Verified clinical certifications and continuing dental education credentials.
+              Verified clinical certifications and continuing dental education credentials under leading dental mentors.
             </p>
           </div>
         </motion.div>
 
-        {/* Two-column layout: featured certificate + thumbnail rail */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
+        {/* Two-column layout: Featured Achievement (Left) + Archive Navigation (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start">
 
-          {/* Left: Featured certificate viewer (~94vw on mobile) */}
+          {/* Left: Featured Achievement Display */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -135,55 +201,64 @@ export default function CredentialsSection() {
           >
             <AnimatePresence mode="wait">
               <motion.div
-                key={featuredCert.id}
+                key={currentItem.id}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.35, ease: easeEditorial }}
               >
-                {/* 94vw Dominant Frame */}
-                <div className="w-[94vw] mx-auto sm:w-full">
-                  <FeaturedCertificateViewer
-                    cert={featuredCert}
+                {/* 90-94vw dominant frame on mobile, full width inside col on desktop */}
+                <div className="w-[92vw] mx-auto sm:w-full">
+                  <FeaturedAchievementViewer
+                    item={currentItem}
                     onOpen={() => setLightboxOpen(true)}
                   />
                 </div>
 
-                {/* Caption */}
+                {/* Minimal Factual Caption */}
                 <div className="mt-3.5 flex items-start justify-between gap-4 px-1">
-                  <div>
-                    <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-brand-primary uppercase block mb-1">
-                      {featuredCert.year} &middot; {featuredCert.issuer}
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[10px] font-mono font-bold tracking-[0.18em] text-brand-primary uppercase block mb-1">
+                      {currentItem.year} &middot; {currentItem.name}
                     </span>
                     <h3 className="font-sans font-bold text-sm sm:text-lg text-brand-textDark leading-snug">
-                      {featuredCert.title}
+                      {currentItem.title}
                     </h3>
+                    {currentItem.description && (
+                      <p className="text-xs text-brand-textMuted mt-0.5 font-sans">
+                        {currentItem.description}
+                      </p>
+                    )}
+                    <span className="text-xs font-sans text-brand-textMuted/80 block mt-0.5">
+                      {currentItem.issuer}
+                    </span>
                   </div>
+
                   <button
                     onClick={() => setLightboxOpen(true)}
-                    className="shrink-0 min-h-[44px] px-3.5 py-2 rounded-full text-xs font-semibold text-brand-deep hover:text-brand-primary hover:bg-brand-soft/70 transition-colors flex items-center gap-1.5 focus:outline-none"
+                    className="shrink-0 min-h-[44px] px-3.5 py-2 rounded-full text-xs font-semibold text-brand-deep hover:text-brand-primary hover:bg-brand-soft/70 transition-colors flex items-center gap-1.5 focus:outline-none touch-manipulation"
                     aria-label="Open fullscreen certificate view"
                   >
                     <ZoomIn className="w-4 h-4" /> Enlarge
                   </button>
                 </div>
 
-                {/* Desktop Prev / Next controls (hidden on mobile, swipe is primary) */}
+                {/* Desktop Prev / Next Controls */}
                 <div className="mt-4 hidden sm:flex items-center gap-3">
                   <button
                     onClick={goPrev}
                     className="w-11 h-11 rounded-full border border-brand-primary/25 text-brand-textDark hover:border-brand-primary hover:bg-brand-soft flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                    aria-label="Previous certificate"
+                    aria-label="Previous achievement"
                   >
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <span className="text-xs font-mono text-brand-textMuted font-semibold">
-                    {featured + 1} / {total}
+                    {activeIdx + 1} / {total}
                   </span>
                   <button
                     onClick={goNext}
                     className="w-11 h-11 rounded-full border border-brand-primary/25 text-brand-textDark hover:border-brand-primary hover:bg-brand-soft flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
-                    aria-label="Next certificate"
+                    aria-label="Next achievement"
                   >
                     <ChevronRight className="w-5 h-5" />
                   </button>
@@ -192,42 +267,30 @@ export default function CredentialsSection() {
             </AnimatePresence>
           </motion.div>
 
-          {/* Right: Certificate horizontal rail on mobile, vertical stack on desktop */}
+          {/* Right on Desktop (hidden on mobile, rendered below rail for mobile-first order) */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ duration: 0.7, delay: 0.15, ease: easeEditorial }}
-            className="w-full lg:col-span-5"
+            className="hidden lg:block w-full lg:col-span-5"
           >
             <div className="flex items-center justify-between mb-3 px-1">
               <p className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-textMuted uppercase">
-                CERTIFICATE ARCHIVE ({total})
+                CERTIFICATE &amp; ACHIEVEMENT ARCHIVE ({total})
               </p>
-              <span className="text-[10px] font-mono text-brand-primary lg:hidden">
-                &larr; Swipe archive &rarr;
-              </span>
             </div>
 
-            {/* Horizontal Scroll-Snap Rail on Mobile with ~75vw Peek */}
-            <div
-              className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-visible pb-3 -mx-4 px-4 lg:mx-0 lg:px-0 no-scrollbar snap-x snap-mandatory touch-pan-x"
-              style={{
-                WebkitOverflowScrolling: 'touch',
-                scrollSnapType: 'x mandatory',
-              }}
-            >
-              {CERTIFICATES_DATA.map((cert, idx) => (
-                <CertificateRailItem
-                  key={cert.id}
-                  cert={cert}
+            {/* Scrollable vertical archive on desktop */}
+            <div className="flex flex-col gap-2.5 max-h-[500px] overflow-y-auto pr-1.5 custom-scrollbar">
+              {ACHIEVEMENTS_DATA.map((item, idx) => (
+                <ArchiveListItem
+                  key={item.id}
+                  item={item}
                   index={idx}
-                  isActive={idx === featured}
-                  onSelect={setFeatured}
-                  onOpen={() => {
-                    setFeatured(idx);
-                    setLightboxOpen(true);
-                  }}
+                  isActive={idx === activeIdx}
+                  onSelect={setActiveIdx}
+                  onOpen={() => openLightboxAt(idx)}
                 />
               ))}
             </div>
@@ -235,97 +298,108 @@ export default function CredentialsSection() {
 
         </div>
 
-        {/* Professional development story */}
+        {/* Horizontal Achievement & Learning Photo Rail */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.7, ease: easeEditorial }}
-          className="mt-14 sm:mt-20 border-t border-brand-primary/15 pt-8 sm:pt-10"
+          className="mt-10 sm:mt-16 pt-8 border-t border-brand-primary/15"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-10 items-end mb-6 sm:mb-8">
-            <div className="lg:col-span-7">
-              <span className="text-[10px] sm:text-[11px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-2">
-                LEARNING IN PRACTICE
+          <div className="flex items-center justify-between mb-4 sm:mb-6 px-1">
+            <div>
+              <span className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase block mb-1">
+                PHOTO ARCHIVE ({total})
               </span>
-              <h3 className="font-serif font-bold text-2xl sm:text-3xl lg:text-4xl text-brand-textDark leading-tight tracking-tight">
-                The best lessons stay with you.
+              <h3 className="font-serif font-bold text-lg sm:text-2xl text-brand-textDark">
+                Clinical Mentorship &amp; Recognition
               </h3>
             </div>
-            <p className="lg:col-span-5 text-xs sm:text-base text-brand-textMuted leading-relaxed max-w-lg">
-              Each course, conversation, and shared case adds something to the way we think. These are the clinicians whose generosity keeps our hands precise and our care grounded.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-5">
-            {CLINICAL_EDUCATORS_DATA.map((educator, index) => (
+            {/* Rail Arrow Controls for desktop */}
+            <div className="hidden sm:flex items-center gap-2">
               <button
-                key={educator.id}
-                type="button"
-                onClick={() => openEducator(index)}
-                className="group text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-xl"
+                onClick={() => scrollRail('prev')}
+                className="w-9 h-9 rounded-full border border-brand-primary/25 text-brand-textDark hover:border-brand-primary hover:bg-brand-soft flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                aria-label="Scroll left in photo archive"
               >
-                <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-brand-soft border border-brand-primary/15">
-                  <img
-                    src={educator.image}
-                    alt={`${educator.name}, ${educator.course}`}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-contain group-hover:scale-[1.02] transition-transform duration-700 ease-out"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 hidden lg:flex translate-y-3 flex-col justify-end bg-gradient-to-t from-black/80 via-black/35 to-transparent px-4 pb-4 pt-14 opacity-0 transition-all duration-500 ease-out group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
-                    <span className="text-[9px] font-mono font-bold tracking-[0.14em] text-brand-aqua uppercase">
-                      {educator.course}
-                    </span>
-                    <span className="mt-1 font-serif text-base font-bold leading-tight text-white">
-                      {educator.name}
-                    </span>
-                  </div>
-                </div>
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.65 }}
-                  transition={{ duration: 0.55, delay: index * 0.08, ease: easeEditorial }}
-                  className="lg:hidden pt-3"
-                >
-                  <span className="block text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.14em] text-brand-primary uppercase">
-                    {educator.course}
-                  </span>
-                  <span className="mt-1 block font-serif text-sm sm:text-base font-bold text-brand-textDark leading-tight">
-                    {educator.name}
-                  </span>
-                </motion.div>
+                <ChevronLeft className="w-4 h-4" />
               </button>
-            ))}
+              <button
+                onClick={() => scrollRail('next')}
+                className="w-9 h-9 rounded-full border border-brand-primary/25 text-brand-textDark hover:border-brand-primary hover:bg-brand-soft flex items-center justify-center transition-all focus:outline-none focus:ring-2 focus:ring-brand-primary"
+                aria-label="Scroll right in photo archive"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <span className="text-[10px] font-mono text-brand-primary sm:hidden">
+              &larr; Swipe gallery &rarr;
+            </span>
           </div>
 
-          <div className="mt-7 sm:mt-9 pt-5 border-t border-brand-primary/10 flex flex-col sm:flex-row gap-2 sm:gap-6 sm:items-center">
-            <span className="text-[9px] sm:text-[10px] font-mono font-bold tracking-[0.16em] text-brand-primary uppercase shrink-0">
-              CONTINUING CONVERSATION
-            </span>
-            <p className="text-xs sm:text-sm text-brand-textMuted leading-relaxed">
-              Learning and exchange with {LEARNING_CIRCLE_NAMES.join(", ")}.
-            </p>
+          {/* Horizontal Scroll-Snap Rail with peek of partial next image on mobile */}
+          <div
+            ref={railRef}
+            className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 no-scrollbar snap-x snap-mandatory touch-pan-x"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              scrollSnapType: 'x mandatory',
+            }}
+          >
+            {ACHIEVEMENTS_DATA.map((item, idx) => (
+              <PhotoRailCard
+                key={`rail-${item.id}`}
+                item={item}
+                index={idx}
+                isActive={idx === activeIdx}
+                onSelect={setActiveIdx}
+                onOpen={openLightboxAt}
+              />
+            ))}
           </div>
         </motion.div>
 
+        {/* Mobile Certificate Archive List (Step 4 in Mobile Order: 1. Featured, 2. Caption, 3. Photo Rail, 4. Archive) */}
+        <div className="lg:hidden mt-8 pt-6 border-t border-brand-primary/15">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <p className="text-[10px] font-mono font-bold tracking-[0.16em] text-brand-textMuted uppercase">
+              CERTIFICATE ARCHIVE ({total})
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            {ACHIEVEMENTS_DATA.map((item, idx) => (
+              <ArchiveListItem
+                key={`mobile-archive-${item.id}`}
+                item={item}
+                index={idx}
+                isActive={idx === activeIdx}
+                onSelect={(selectedIdx) => {
+                  setActiveIdx(selectedIdx);
+                  // Optional scroll to top of section for smooth viewing on mobile
+                  const el = document.getElementById('credentials');
+                  if (el) {
+                    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+                    window.scrollTo({ top, behavior: 'smooth' });
+                  }
+                }}
+                onOpen={() => openLightboxAt(idx)}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
 
-      {/* Reusable Fullscreen Media Lightbox with Uncropped object-contain */}
+      {/* Unified Reusable Media Lightbox */}
       <MediaLightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        items={CERTIFICATES_DATA}
-        currentIndex={featured}
-        onIndexChange={setFeatured}
-      />
-      <MediaLightbox
-        isOpen={educatorLightboxOpen}
-        onClose={() => setEducatorLightboxOpen(false)}
-        items={CLINICAL_EDUCATORS_DATA}
-        currentIndex={activeEducator}
-        onIndexChange={setActiveEducator}
+        items={ACHIEVEMENTS_DATA}
+        currentIndex={activeIdx}
+        onIndexChange={setActiveIdx}
       />
     </section>
   );

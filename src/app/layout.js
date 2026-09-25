@@ -68,6 +68,8 @@ export const metadata = {
   },
 };
 
+import SmoothScrollProvider from '../components/providers/SmoothScrollProvider';
+
 export default function RootLayout({ children }) {
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -138,7 +140,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="bg-white text-brand-textDark antialiased selection:bg-brand-primary selection:text-white font-sans">
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
       </body>
     </html>
   );

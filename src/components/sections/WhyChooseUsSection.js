@@ -6,21 +6,33 @@ import { motion, AnimatePresence } from 'framer-motion';
 const PHILOSOPHY_VALUES = [
   {
     num: "01",
-    title: "PERSONALIZED",
+    title: "ADVANCE TECHNOLOGY",
+    statement: "Evidence-based digital diagnostics and precision clinical technique.",
+    detail: "Low-dose digital radiography, intraoral imaging, and advanced instruments for predictable, high-precision oral wellness.",
+  },
+  {
+    num: "02",
+    title: "STRICT STERILISATION",
+    statement: "Hospital-grade multi-stage autoclave sterilization safeguarding every visit.",
+    detail: "Class B autoclave sterilization, disposable consumables, and rigorous chemical disinfection for absolute patient safety.",
+  },
+  {
+    num: "03",
+    title: "PATIENT-CENTERED CARE",
     statement: "Care mapped to your unique anatomy, with treatment paced to your goals.",
     detail: "Comprehensive consultation listening to your history, prioritizing natural tooth preservation with transparent clinical guidance.",
   },
   {
-    num: "02",
-    title: "PRECISE",
-    statement: "Evidence-based digital diagnostics and micro-precision clinical technique.",
-    detail: "Low-dose digital imaging, diagnostic clarity, and meticulous procedural standards for predictable, long-term oral wellness.",
+    num: "04",
+    title: "COMFORTABLE ENVIRONMENT",
+    statement: "A calm, soothing, and anxiety-free clinic setting designed for your peace of mind.",
+    detail: "Gentle procedural technique, step-by-step clarity before treatment begins, and quiet operatory suites tailored to ease anxiety.",
   },
   {
-    num: "03",
-    title: "COMFORT-LED",
-    statement: "A calm, unhurried pace designed to make every visit reassuring.",
-    detail: "Gentle procedural technique, step-by-step clarity before treatment begins, and quiet operatory suites tailored to ease anxiety.",
+    num: "05",
+    title: "CARING PROFESSIONALS",
+    statement: "Dedicated dental specialists committed to empathetic, gentle patient care.",
+    detail: "Warm, experienced dental professionals dedicated to continuing education, ethical practice, and personalized clinical attention.",
   },
 ];
 
@@ -48,7 +60,7 @@ export default function WhyChooseUsSection() {
 
       {/* Large Subtle Watermark Accent: Architectural Numeral */}
       <div className="absolute -bottom-8 -right-8 pointer-events-none select-none font-serif text-[180px] sm:text-[240px] font-bold text-brand-primary/[0.03] leading-none z-0">
-        03
+        05
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

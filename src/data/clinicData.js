@@ -285,9 +285,9 @@ export const ACHIEVEMENTS_DATA = [
     image: "/assets/awards/certificates/image copy 4.webp",
   },
   {
-    id: "ach-aswini",
-    name: "Dr. Aswini Bhalerao",
-    year: "2023",
+    id: "ach-ashwini",
+    name: "Dr. Ashwini Bhalerao",
+    year: "2022",
     title: "Fundamentals of Oral Surgery Course",
     issuer: "Odisha Dental Academy",
     image: "/assets/awards/certificates/image copy 3.webp",
@@ -299,7 +299,7 @@ export const CLINICAL_EDUCATORS_DATA = ACHIEVEMENTS_DATA;
 export const LEARNING_CIRCLE_NAMES = [
   "Dr. Abdul Minam",
   "Dr. Komal Majumdar",
-  "Dr. Aswini Bhalerao",
+  "Dr. Ashwini Bhalerao",
   "Dr. Suhas Lele",
   "Dr. Vishal Gandhi",
   "Dr. Ramesh Selvam & Dr. Malarvizhi Ramesh",

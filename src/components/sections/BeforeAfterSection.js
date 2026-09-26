@@ -2,8 +2,9 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
-const CLINICAL_CASES = [
+const STATIC_CLINICAL_CASES = [
   {
     id: "diastema",
     num: "01",
@@ -203,10 +204,30 @@ function CompareCanvas({
 }
 
 export default function BeforeAfterSection() {
+  const dynamicMedia = useDynamicMedia('Before & After', STATIC_CLINICAL_CASES);
+
+  // Normalize dynamic cases and filter only active ones with both before and after images
+  const filteredCases = dynamicMedia.filter((item) => item.isActive !== false && item.beforeImage && item.afterImage);
+  const rawList = filteredCases.length > 0 ? filteredCases : STATIC_CLINICAL_CASES;
+  const totalCasesStr = String(rawList.length).padStart(2, '0');
+
+  const casesList = rawList.map((item, idx) => ({
+    id: item._id || item.id || `case-${idx}`,
+    num: item.num || String(idx + 1).padStart(2, '0'),
+    total: totalCasesStr,
+    name: (item.caseName || item.title || `Case ${idx + 1}`).toUpperCase(),
+    title: item.title || item.caseName || `Case ${idx + 1}`,
+    tag: item.tag || item.category || 'Clinical Treatment',
+    beforeImage: item.beforeImage || '/assets/before-after/diastema-before.webp',
+    afterImage: item.afterImage || '/assets/before-after/diastema-after.webp',
+    preOpLabel: item.beforeLabel || 'Pre-Op',
+    postOpLabel: item.afterLabel || 'Post-Op',
+  }));
+
   const [activeCaseIdx, setActiveCaseIdx] = useState(0);
   const [isDividerDragging, setIsDividerDragging] = useState(false);
 
-  const activeCase = CLINICAL_CASES[activeCaseIdx] || CLINICAL_CASES[0];
+  const activeCase = casesList[activeCaseIdx] || casesList[0];
 
   return (
     <section
@@ -285,7 +306,7 @@ export default function BeforeAfterSection() {
             aria-label="Clinical Cases"
             className="lg:col-span-4 xl:col-span-4 flex flex-col border-t border-brand-primary/15 divide-y divide-brand-primary/15"
           >
-            {CLINICAL_CASES.map((item, idx) => {
+            {casesList.map((item, idx) => {
               const isActive = activeCaseIdx === idx;
               return (
                 <button
@@ -350,7 +371,7 @@ export default function BeforeAfterSection() {
               scrollSnapType: isDividerDragging ? 'none' : 'x mandatory',
             }}
           >
-            {CLINICAL_CASES.map((item, idx) => (
+            {casesList.map((item, idx) => (
               <div
                 key={item.id}
                 className="w-[92vw] sm:w-[94vw] snap-start shrink-0 flex flex-col"

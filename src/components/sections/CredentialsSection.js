@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { ACHIEVEMENTS_DATA } from '@/data/clinicData';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
 function FeaturedAchievementViewer({ item, onOpen }) {
   const tapHandlers = useTapVsSwipe(onOpen);
@@ -137,13 +138,28 @@ function PhotoRailCard({ item, index, isActive, onSelect, onOpen }) {
 }
 
 export default function CredentialsSection() {
+  const dynamicAchievements = useDynamicMedia('Achievements', ACHIEVEMENTS_DATA);
+
+  const normalizedItems = (dynamicAchievements || []).map((item, idx) => ({
+    id: item._id || item.id || `ach-${idx}`,
+    name: item.name || 'Dr. Siulik Badajena',
+    year: item.year || '2024',
+    title: item.title || 'Clinical Certification',
+    issuer: item.issuer || 'Continuing Dental Education',
+    image: item.url || item.image || '/assets/awards/certificates/implant-dentistry.webp',
+    description: item.description || '',
+    isFeatured: Boolean(item.isFeatured),
+  }));
+
+  const achievementsList = normalizedItems.length > 0 ? normalizedItems : ACHIEVEMENTS_DATA;
+
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const railRef = useRef(null);
   const easeEditorial = [0.16, 1, 0.3, 1];
 
-  const currentItem = ACHIEVEMENTS_DATA[activeIdx] || ACHIEVEMENTS_DATA[0];
-  const total = ACHIEVEMENTS_DATA.length;
+  const currentItem = achievementsList[activeIdx] || achievementsList[0];
+  const total = achievementsList.length;
 
   const goPrev = () => setActiveIdx((i) => (i - 1 + total) % total);
   const goNext = () => setActiveIdx((i) => (i + 1) % total);
@@ -283,7 +299,7 @@ export default function CredentialsSection() {
 
             {/* Scrollable vertical archive on desktop */}
             <div className="flex flex-col gap-2.5 max-h-[500px] overflow-y-auto pr-1.5 custom-scrollbar">
-              {ACHIEVEMENTS_DATA.map((item, idx) => (
+              {achievementsList.map((item, idx) => (
                 <ArchiveListItem
                   key={item.id}
                   item={item}
@@ -348,7 +364,7 @@ export default function CredentialsSection() {
               scrollSnapType: 'x mandatory',
             }}
           >
-            {ACHIEVEMENTS_DATA.map((item, idx) => (
+            {achievementsList.map((item, idx) => (
               <PhotoRailCard
                 key={`rail-${item.id}`}
                 item={item}
@@ -370,7 +386,7 @@ export default function CredentialsSection() {
           </div>
 
           <div className="flex flex-col gap-2.5">
-            {ACHIEVEMENTS_DATA.map((item, idx) => (
+            {achievementsList.map((item, idx) => (
               <ArchiveListItem
                 key={`mobile-archive-${item.id}`}
                 item={item}
@@ -397,7 +413,7 @@ export default function CredentialsSection() {
       <MediaLightbox
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
-        items={ACHIEVEMENTS_DATA}
+        items={achievementsList}
         currentIndex={activeIdx}
         onIndexChange={setActiveIdx}
       />

@@ -5,12 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
-/**
- * Authentic Client Photography from /public/assets/clinic/
- * Four core clinic spaces with verified authentic photography
- */
-const CLINIC_SPACES = [
+const STATIC_CLINIC_SPACES = [
   {
     id: 1,
     num: "01",
@@ -50,6 +47,20 @@ const CLINIC_SPACES = [
 ];
 
 export default function AboutClinicSection() {
+  const dynamicClinic = useDynamicMedia('Clinic', STATIC_CLINIC_SPACES);
+
+  const normalizedSpaces = (dynamicClinic || []).map((item, idx) => ({
+    id: item._id || item.id || idx + 1,
+    num: item.num || String(idx + 1).padStart(2, '0'),
+    tag: (item.category || item.tag || 'CLINIC').toUpperCase(),
+    title: item.title || 'Thoughtfully prepared clinical space',
+    image: item.url || item.image || '/assets/clinic/reception/image.webp',
+    objectPosition: item.objectPosition || 'center center',
+    alt: item.alt || item.title || "Dr. Siulik's Dental Care clinic space",
+  }));
+
+  const CLINIC_SPACES = normalizedSpaces.length > 0 ? normalizedSpaces : STATIC_CLINIC_SPACES;
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);

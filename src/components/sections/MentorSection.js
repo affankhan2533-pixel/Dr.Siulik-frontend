@@ -5,24 +5,28 @@ import { motion } from 'framer-motion';
 import { Maximize2 } from 'lucide-react';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
-/**
- * Editorial Mentor & Inspiration Section — Dr. Siulik's Dental Care
- * 
- * - Placed naturally between 'Meet Dr. Siulik' and 'Services'.
- * - Authentic client photograph: /assets/mentor/image.png
- * - Quietly emotional, human, premium editorial composition.
- * - Mobile: Prominent portrait (88-94vw) -> Eyebrow -> Heading -> Supporting Line -> Paragraph.
- * - Desktop: Asymmetric editorial composition (Left dominant portrait / Right reflective typography).
- * - Fullscreen MediaLightbox on tap/click.
- */
+const STATIC_MENTOR_PHOTO = [
+  {
+    id: "mentor-portrait",
+    image: "/assets/mentor/image.png",
+    tag: "MENTOR & INSPIRATION",
+    title: "My Mentor & Inspiration",
+  },
+];
+
 export default function MentorSection() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const dynamicMedia = useDynamicMedia('Mentor', STATIC_MENTOR_PHOTO);
+  const currentPhoto = dynamicMedia[0] || STATIC_MENTOR_PHOTO[0];
+  const mentorImgSrc = currentPhoto.url || currentPhoto.image || '/assets/mentor/image.png';
 
   const mentorPhoto = [
     {
       id: "mentor-portrait",
-      image: "/assets/mentor/image.png",
+      image: mentorImgSrc,
       tag: "MENTOR & INSPIRATION",
       title: "My Mentor & Inspiration",
     },
@@ -50,7 +54,7 @@ export default function MentorSection() {
               className="group relative w-full max-w-[260px] mx-auto aspect-[4/5] overflow-hidden rounded-[14px] bg-brand-soft border border-brand-primary/15 shadow-[0_10px_30px_rgba(9,24,30,0.08)] hover:shadow-[0_16px_40px_rgba(9,24,30,0.12)] transition-all duration-500 cursor-pointer"
             >
               <img
-                src="/assets/mentor/image.png"
+                src={mentorImgSrc}
                 alt="Mentor and guiding influence of Dr. Siulik Badajena at Dr. Siulik's Dental Care"
                 loading="lazy"
                 decoding="async"

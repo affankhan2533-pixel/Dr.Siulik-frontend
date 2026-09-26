@@ -4,8 +4,9 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, ArrowUpRight } from 'lucide-react';
 import { SERVICES_DATA } from '@/data/clinicData';
+import { useDynamicServices } from '@/lib/useDynamicData';
 
-const CATEGORIES = [
+const STATIC_CATEGORIES = [
   {
     id: "preventive",
     num: "01",
@@ -58,7 +59,21 @@ const CATEGORIES = [
 ];
 
 export default function ServicesSection({ onOpenBooking }) {
-  const [activeTab, setActiveTab] = useState(CATEGORIES[0].id);
+  const dynamicServices = useDynamicServices(SERVICES_DATA);
+
+  // Normalize dynamic or static categories
+  const categoriesList = dynamicServices.map((cat, idx) => ({
+    id: cat.categoryId || cat.id || `cat-${idx}`,
+    num: cat.num || String(idx + 1).padStart(2, '0'),
+    shortName: cat.shortName || cat.title?.toUpperCase() || `CAT ${idx + 1}`,
+    title: cat.title,
+    tagline: cat.tagline || cat.description || '',
+    description: cat.description || '',
+    treatments: (cat.treatments || []).filter((t) => t.isActive !== false),
+  }));
+
+  const activeCategories = categoriesList.length > 0 ? categoriesList : STATIC_CATEGORIES;
+  const [activeTab, setActiveTab] = useState(activeCategories[0].id);
   const railRef = useRef(null);
 
   const handleCategoryClick = (catId, index) => {
@@ -74,8 +89,8 @@ export default function ServicesSection({ onOpenBooking }) {
     }
   };
 
-  const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0];
-  const serviceData = SERVICES_DATA.find((s) => s.id === activeTab) || SERVICES_DATA[0];
+  const currentCategory = activeCategories.find((c) => c.id === activeTab) || activeCategories[0];
+  const serviceData = dynamicServices.find((s) => (s.categoryId || s.id) === activeTab) || currentCategory || SERVICES_DATA[0];
 
   return (
     <section
@@ -118,7 +133,7 @@ export default function ServicesSection({ onOpenBooking }) {
           className="flex lg:hidden items-center gap-2 overflow-x-auto pb-3 pt-1 -mx-4 px-4 no-scrollbar snap-x snap-mandatory touch-pan-x mb-5"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          {CATEGORIES.map((cat, idx) => {
+          {activeCategories.map((cat, idx) => {
             const isActive = cat.id === activeTab;
             return (
               <button
@@ -148,7 +163,7 @@ export default function ServicesSection({ onOpenBooking }) {
             aria-label="Clinical Disciplines"
             className="hidden lg:flex lg:col-span-5 xl:col-span-5 flex-col border-t border-white/10 divide-y divide-white/10"
           >
-            {CATEGORIES.map((cat) => {
+            {activeCategories.map((cat) => {
               const isActive = cat.id === activeTab;
               return (
                 <button
@@ -229,9 +244,9 @@ export default function ServicesSection({ onOpenBooking }) {
 
                 {/* Treatment List in Clean Editorial Rows */}
                 <div className="relative z-10 divide-y divide-white/10 border-t border-b border-white/10">
-                  {serviceData.treatments.map((treatment, idx) => (
+                  {(serviceData?.treatments || []).filter((t) => t.isActive !== false).map((treatment, idx) => (
                     <div
-                      key={treatment.name}
+                      key={treatment.name || idx}
                       className="group py-3.5 sm:py-4 flex items-center justify-between cursor-default transition-colors duration-200"
                     >
                       <div className="pr-4">

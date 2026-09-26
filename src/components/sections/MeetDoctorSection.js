@@ -5,26 +5,29 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Maximize2 } from 'lucide-react';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
-/**
- * Editorial Founder Experience — Dr. Siulik's Dental Care
- * Step 11 Specifications:
- * - Authentic client photograph: /assets/doctor/image.png
- * - Mobile-first order: MEET THE FOUNDER -> Large Portrait (94vw) -> Identity -> Statement -> Summary -> About Trigger
- * - Asymmetric desktop editorial composition (Large portrait left / refined typography right)
- * - Restrained image reveal: scale 1.02 -> 1.00 on viewport entry
- * - Factual identity: DR. SIULIK BADAJENA / FOUNDER & CHIEF DENTAL SURGEON
- * - Playfair Display for Name & Statement; Plus Jakarta Sans for Labels, Body, and CTAs
- * - Fullscreen MediaLightbox preservation on mobile tap
- */
+const STATIC_DOCTOR_PHOTO = [
+  {
+    id: "doc-portrait",
+    image: "/assets/doctor/image.png",
+    tag: "FOUNDER & CHIEF DENTAL SURGEON",
+    title: "Dr. Siulik Badajena — Founder & Chief Dental Surgeon",
+  },
+];
+
 export default function MeetDoctorSection() {
   const [bioExpanded, setBioExpanded] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  const dynamicMedia = useDynamicMedia('Doctor', STATIC_DOCTOR_PHOTO);
+  const currentPhoto = dynamicMedia[0] || STATIC_DOCTOR_PHOTO[0];
+  const doctorImgSrc = currentPhoto.url || currentPhoto.image || '/assets/doctor/image.png';
+
   const doctorPhoto = [
     {
       id: "doc-portrait",
-      image: "/assets/doctor/image.png",
+      image: doctorImgSrc,
       tag: "FOUNDER & CHIEF DENTAL SURGEON",
       title: "Dr. Siulik Badajena — Founder & Chief Dental Surgeon",
     },
@@ -65,7 +68,7 @@ export default function MeetDoctorSection() {
             >
               {/* Authentic Client Doctor Photograph */}
               <img
-                src="/assets/doctor/image.png"
+                src={doctorImgSrc}
                 alt="Dr. Siulik Badajena, Founder and Chief Dental Surgeon at Dr. Siulik's Dental Care"
                 loading="eager"
                 decoding="async"

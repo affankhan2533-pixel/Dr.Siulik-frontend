@@ -5,6 +5,28 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Maximize2 } from 'lucide-react';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
+
+const STATIC_EQUIPMENT_PHOTOS = [
+  {
+    id: "tech-1",
+    image: "/assets/clinic/equipment/image.webp",
+    tag: "PRECISION OPERATORY",
+    title: "Sterile Clinical Operatory & Digital Imaging Suite",
+  },
+  {
+    id: "tech-2",
+    image: "/assets/clinic/equipment/image copy.webp",
+    tag: "INSPECTION & STERILIZATION",
+    title: "Class B Autoclaves & Multi-Stage Instrument Sterilization",
+  },
+  {
+    id: "tech-3",
+    image: "/assets/clinic/equipment/image copy 2.webp",
+    tag: "CLINICAL EQUIPMENT",
+    title: "Advanced Dental Care Systems & Treatment Suite",
+  },
+];
 
 const TECH_ITEMS = [
   {
@@ -56,26 +78,16 @@ export default function TechnologySection() {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const railRef = useRef(null);
 
-  const equipmentPhotos = [
-    {
-      id: "tech-1",
-      image: "/assets/clinic/equipment/image.webp",
-      tag: "PRECISION OPERATORY",
-      title: "Sterile Clinical Operatory & Digital Imaging Suite",
-    },
-    {
-      id: "tech-2",
-      image: "/assets/clinic/equipment/image copy.webp",
-      tag: "INSPECTION & STERILIZATION",
-      title: "Class B Autoclaves & Multi-Stage Instrument Sterilization",
-    },
-    {
-      id: "tech-3",
-      image: "/assets/clinic/equipment/image copy 2.webp",
-      tag: "CLINICAL EQUIPMENT",
-      title: "Advanced Dental Care Systems & Treatment Suite",
-    },
-  ];
+  const dynamicMedia = useDynamicMedia('Technology', STATIC_EQUIPMENT_PHOTOS);
+  const normalizedPhotos = (dynamicMedia || []).map((item, idx) => ({
+    id: item._id || item.id || `tech-${idx}`,
+    image: item.url || item.image || '/assets/clinic/equipment/image.webp',
+    tag: item.tag || 'PRECISION OPERATORY',
+    title: item.title || 'Sterile Clinical Operatory & Digital Imaging Suite',
+  }));
+
+  const equipmentPhotos = normalizedPhotos.length > 0 ? normalizedPhotos : STATIC_EQUIPMENT_PHOTOS;
+  const primaryEquipmentImg = equipmentPhotos[0]?.image || '/assets/clinic/equipment/image.webp';
 
   const tapHandlers = useTapVsSwipe(() => setLightboxOpen(true));
 
@@ -138,7 +150,7 @@ export default function TechnologySection() {
             >
               {/* Authentic Equipment Image */}
               <img
-                src="/assets/clinic/equipment/image.webp"
+                src={primaryEquipmentImg}
                 alt="Sterile clinical equipment and modern operatory suite at Dr. Siulik's Dental Care"
                 loading="lazy"
                 decoding="async"

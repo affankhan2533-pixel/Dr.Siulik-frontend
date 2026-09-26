@@ -4,10 +4,25 @@ import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Calendar } from 'lucide-react';
 import { CLINIC_INFO } from '../../data/clinicData';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
 const EASE = [0.16, 1, 0.3, 1];
 
+const STATIC_HERO_MEDIA = [
+  {
+    url: '/assets/hero/video/hero-video.mp4',
+    posterImage: '/assets/hero/images/image.png',
+    type: 'video',
+  },
+];
+
 export default function HeroSection({ onOpenBooking }) {
+  const heroMedia = useDynamicMedia('Hero', STATIC_HERO_MEDIA);
+  const currentHero = heroMedia[0] || STATIC_HERO_MEDIA[0];
+  const videoSrc = currentHero?.url || '/assets/hero/video/hero-video.mp4';
+  const posterSrc = currentHero?.posterImage || '/assets/hero/images/image.png';
+  const hasVideo = currentHero?.type === 'video' && videoSrc;
+
   const shouldReduceMotion = useReducedMotion();
   const sectionRef = useRef(null);
 
@@ -30,18 +45,19 @@ export default function HeroSection({ onOpenBooking }) {
       aria-label="Dr. Siulik's Dental Care — Hero"
     >
       {/* ── VIDEO / IMAGE LAYER — full-bleed video environment ── */}
-      {shouldReduceMotion ? (
-        /* Static poster fallback for reduced-motion */
+      {shouldReduceMotion || !hasVideo ? (
+        /* Static poster fallback for reduced-motion or image-only mode */
         <img
-          src="/assets/hero/images/image.png"
+          src={posterSrc}
           alt="Dr. Siulik's Dental Care Consultation Suite"
           aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-[58%_38%] sm:object-center"
         />
       ) : (
         <motion.video
-          src="/assets/hero/video/hero-video.mp4"
-          poster="/assets/hero/images/image.png"
+          key={videoSrc}
+          src={videoSrc}
+          poster={posterSrc}
           autoPlay
           muted
           loop

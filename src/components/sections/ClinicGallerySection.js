@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 import { CLINIC_GALLERY } from '@/data/clinicData';
 import MediaLightbox from '../ui/MediaLightbox';
 import { useTapVsSwipe } from '../ui/useTapVsSwipe';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
 function GalleryCard({ item, index, onOpen }) {
   const [loaded, setLoaded] = useState(false);
@@ -60,12 +61,22 @@ function GalleryCard({ item, index, onOpen }) {
 }
 
 export default function ClinicGallerySection() {
+  const dynamicGallery = useDynamicMedia('Gallery', CLINIC_GALLERY);
+
+  const normalizedItems = (dynamicGallery || []).map((item, idx) => ({
+    id: item._id || item.id || `gallery-${idx}`,
+    title: item.title || 'Clinic Space',
+    category: item.category || 'Reception',
+    image: item.url || item.image || '/assets/clinic/reception/image.webp',
+  }));
+
+  const items = normalizedItems.length > 0 ? normalizedItems : CLINIC_GALLERY;
+
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const scrollContainerRef = useRef(null);
 
   const easeEditorial = [0.16, 1, 0.3, 1];
-  const items = CLINIC_GALLERY;
 
   const handleOpenLightbox = (idx) => {
     setLightboxIndex(idx);

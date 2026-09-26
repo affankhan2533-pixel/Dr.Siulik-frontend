@@ -3,8 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, Maximize2 } from 'lucide-react';
+import { useDynamicMedia } from '@/lib/useDynamicData';
 
-const AUTHENTIC_STORIES = [
+const STATIC_AUTHENTIC_STORIES = [
   {
     id: "story-01",
     num: "01",
@@ -45,6 +46,22 @@ function formatTime(secs) {
 }
 
 export default function TestimonialsSection() {
+  const dynamicTestimonials = useDynamicMedia('Testimonials', STATIC_AUTHENTIC_STORIES);
+
+  const rawList = dynamicTestimonials && dynamicTestimonials.length > 0 ? dynamicTestimonials : STATIC_AUTHENTIC_STORIES;
+  const totalCountStr = String(rawList.length).padStart(2, '0');
+
+  const AUTHENTIC_STORIES = rawList.map((item, idx) => ({
+    id: item._id || item.id || `story-${idx + 1}`,
+    num: item.num || String(idx + 1).padStart(2, '0'),
+    total: totalCountStr,
+    label: item.label || 'PATIENT STORY',
+    title: item.title || `Patient Experience ${String(idx + 1).padStart(2, '0')}`,
+    category: item.category || 'Clinical Care Visit',
+    videoUrl: item.url || item.videoUrl || '/assets/testimonials/videos/VID-20260904-WA0026.mp4',
+    poster: item.posterImage || item.poster || '/assets/testimonials/thumbnails/thumb-1.webp',
+  }));
+
   const [activeStoryIdx, setActiveStoryIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
